@@ -19,25 +19,20 @@ services:
       - key: JWT_SECRET
         generateValue: true
 
-  # Frontend Static Site
+  # Frontend Web Service (Using Node for reliability)
   - type: web
     name: lifeflow-frontend
-    env: static
+    env: node
     plan: free
     rootDir: lifeflow-modern/frontend
     buildCommand: npm install && npm run build
-    staticPublishDir: dist
+    startCommand: npm start
     envVars:
       - key: VITE_API_URL
         fromService:
           type: web
           name: lifeflow-backend
           property: host
-    # For Vite apps we often need to rewrite to index.html for SPA routing
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
 
 databases:
   - name: lifeflow-db
