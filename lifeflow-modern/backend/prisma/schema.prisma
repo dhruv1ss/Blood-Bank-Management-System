@@ -1,0 +1,3 @@
+// This project uses Sequelize ORM, not Prisma
+// Prisma schema is not needed - models are defined in config/db.js
+// If you want to use Prisma instead, you'll need to migrate from Sequelize

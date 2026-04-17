@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #ef4444;
+    --accent-hover: #dc2626;
+    --border: #e2e8f0;
+    --glass-blur: 16px;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .dark {
+    --bg-primary: #020617;
+    --bg-secondary: #0f172a;
+    --bg-card: rgba(15, 23, 42, 0.8);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #f87171;
+    --accent-hover: #ef4444;
+    --border: #1e293b;
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: var(--bg-card);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border);
+  }
+  .brand-font {
+    font-family: 'Outfit', sans-serif; /* High-end modern font */
+  }
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+}
+
+/* ===== DARK MODE ===== */
+html.dark body {
+  background-color: #030712 !important;
+  color: #f3f4f6;
+}
+
+html.dark nav {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+html.dark .bg-white,
+html.dark .bg-white\/80,
+html.dark .bg-white\/90,
+html.dark .bg-white\/95,
+html.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+html.dark .bg-gray-50\/80,
+html.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+html.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+html.dark .text-gray-800 {
+  color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+html.dark .text-gray-600 {
+  color: #d1d5db !important;
+}
+
+html.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+html.dark .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+html.dark .border-gray-100,
+html.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border-color: #374151 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+html.dark .bg-gray-50\/50 {
+  background-color: #1f2937 !important;
+}
+/* Ticker Animation */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 40s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+} 
+
+/* Premium Transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 20px;
+  border: 3px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Hide scrollbar for specific elements */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Liquid Effect Physics (Phase 1) */
+.liquid-container {
+  filter: contrast(30);
+  background: transparent;
+}
+
+.liquid-drop {
+  filter: blur(15px);
+}
+
+.liquid-hero-bg {
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+}
+
+@keyframes drift {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.animate-drift {
+  animation: drift 10s ease-in-out infinite;
+}

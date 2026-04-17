@@ -1,0 +1,20 @@
+﻿[
+    {
+        "type":  "navigate",
+        "label":  "🩸 Go to Donation Form",
+        "url":  "/dashboard",
+        "requireAuth":  true
+    },
+    {
+        "type":  "navigate",
+        "label":  "🗺️ Find Donation Camps",
+        "url":  "/camps",
+        "requireAuth":  false
+    },
+    {
+        "type":  "navigate",
+        "label":  "🔐 Login to Donate",
+        "url":  "/login",
+        "requireAuth":  false
+    }
+]

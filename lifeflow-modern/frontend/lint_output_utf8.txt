@@ -1,0 +1,45 @@
+﻿
+> frontend@0.0.0 lint
+> eslint .
+
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\components\AppointmentBooking.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\components\Navbar.jsx
+  26:27  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  24 |   // Close mobile menu on route change
+  25 |   useEffect(() => {
+> 26 |     if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+     |                           ^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |   }, [location.pathname, isMobileMenuOpen]);
+  28 |
+  29 |   const navLinks = [  react-hooks/set-state-in-effect
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\AdminDashboard.jsx
+  2:27  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\DonationCamps.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\Leaderboard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\Login.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\OrgDashboard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\xampp\htdocs\LifeFlow\lifeflow-modern\frontend\src\pages\Register.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 8 problems (8 errors, 0 warnings)
+

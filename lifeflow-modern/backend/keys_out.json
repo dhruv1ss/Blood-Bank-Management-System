@@ -1,0 +1,34 @@
+[
+  {
+    "TABLE_NAME": "users",
+    "index_count": 64
+  },
+  {
+    "TABLE_NAME": "appointments",
+    "index_count": 4
+  },
+  {
+    "TABLE_NAME": "donations",
+    "index_count": 3
+  },
+  {
+    "TABLE_NAME": "camp_registrations",
+    "index_count": 3
+  },
+  {
+    "TABLE_NAME": "staff",
+    "index_count": 2
+  },
+  {
+    "TABLE_NAME": "requests",
+    "index_count": 2
+  },
+  {
+    "TABLE_NAME": "notifications",
+    "index_count": 2
+  },
+  {
+    "TABLE_NAME": "camps",
+    "index_count": 2
+  }
+]

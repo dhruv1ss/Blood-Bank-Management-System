@@ -1,0 +1,21 @@
+{
+  "id": 6,
+  "name": "Dhruv Solanki",
+  "email": "rajputdhruv385@gmail.com",
+  "password": "$2b$10$DvxoLJZm5e.d5o9hkCsVXuLXus0u6eyDEp4M1TLaeXV/qssbRnJdm",
+  "bloodGroup": "O+",
+  "age": 19,
+  "city": "Patan",
+  "state": "Gujrat",
+  "phone": "8780186981",
+  "role": "DONOR",
+  "points": 450,
+  "badge": "Gold",
+  "orgName": null,
+  "orgPhone": null,
+  "orgAddress": null,
+  "lastDonationDate": null,
+  "avatar": "",
+  "createdAt": "2026-03-12T11:50:54.000Z",
+  "updatedAt": "2026-03-20T05:26:56.000Z"
+}

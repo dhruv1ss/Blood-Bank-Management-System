@@ -1,0 +1,41 @@
+[
+  {
+    "Tables_in_lifeflow": "appointments"
+  },
+  {
+    "Tables_in_lifeflow": "camp_registrations"
+  },
+  {
+    "Tables_in_lifeflow": "camps"
+  },
+  {
+    "Tables_in_lifeflow": "comments"
+  },
+  {
+    "Tables_in_lifeflow": "donations"
+  },
+  {
+    "Tables_in_lifeflow": "likes"
+  },
+  {
+    "Tables_in_lifeflow": "notifications"
+  },
+  {
+    "Tables_in_lifeflow": "posts"
+  },
+  {
+    "Tables_in_lifeflow": "profileeditrequests"
+  },
+  {
+    "Tables_in_lifeflow": "requests"
+  },
+  {
+    "Tables_in_lifeflow": "staff"
+  },
+  {
+    "Tables_in_lifeflow": "supportmessages"
+  },
+  {
+    "Tables_in_lifeflow": "users"
+  }
+]
