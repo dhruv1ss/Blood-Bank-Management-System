@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import compression from 'compression';
+import bcrypt from 'bcryptjs';
 import { User, Request, Donation, Camp, sequelize } from './config/db.js';
 import { cacheMiddleware, rateLimitMiddleware } from './middleware/cache.js';
 import { updateExistingCampsWithCoordinates } from './utils/updateCampCoordinates.js';
@@ -157,6 +158,20 @@ const syncDatabase = async (retries = 3, delay = 5000) => {
         try {
             await sequelize.sync(); // Disabled alter to avoid MySQL index limit bugs
             console.log('✅ Database connected and synchronized.');
+            
+            // Auto-seed admin if database is empty (for new deployments)
+            const userCount = await User.count();
+            if (userCount === 0) {
+                console.log('🌱 Database is empty. Seeding default admin...');
+                const hashedPassword = await bcrypt.hash('admin123', 10);
+                await User.create({
+                    name: 'Admin',
+                    email: 'admin@lifeflow.com',
+                    password: hashedPassword,
+                    role: 'ADMIN'
+                });
+                console.log('✅ Default admin seeded (admin@lifeflow.com / admin123)');
+            }
             return;
         } catch (err) {
             console.error(`❌ Database sync attempt ${i + 1} failed:`, err.message);
