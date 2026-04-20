@@ -1,16 +1,5 @@
 # LifeFlow Modern - Blood Donation Management System
 
-## 📸 **Application Showcase**
-
-<div align="center">
-  <img src="../screenshots/01_home_page.png" alt="Home Page" width="48%">
-  <img src="../screenshots/05_heroes_page.png" alt="Heroes Leaderboard" width="48%">
-</div>
-<div align="center">
-  <img src="../screenshots/04_donation_camps.png" alt="Donation Camps" width="48%">
-  <img src="../screenshots/06_user_dashboard.png" alt="User Dashboard" width="48%">
-</div>
-
 ## 🚀 **Enhanced Features Added**
 
 ### ✅ **Core Features**
