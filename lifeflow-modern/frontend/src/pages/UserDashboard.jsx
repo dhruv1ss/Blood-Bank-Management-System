@@ -469,7 +469,7 @@ const UserDashboard = () => {
                             </motion.div>
 
                             {/* QUICK ACTIONS HUB */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <motion.button 
                                     whileHover={{ y: -5 }}
                                     onClick={() => setActiveSection('request')}
@@ -479,8 +479,8 @@ const UserDashboard = () => {
                                     <div className="relative h-full p-10 flex flex-col justify-between items-start text-white text-left">
                                         <Activity className="w-12 h-12 mb-4" />
                                         <div>
-                                            <h3 className="text-3xl font-black brand-font mb-2">Request Emergency Blood</h3>
-                                            <p className="text-red-100 font-medium opacity-80 max-w-xs">Instantly alert our community for patients in critical need.</p>
+                                            <h3 className="text-2xl font-black brand-font mb-2">Request Blood</h3>
+                                            <p className="text-red-100 font-medium opacity-80 text-xs">Instantly alert our community for patients in critical need.</p>
                                         </div>
                                     </div>
                                 </motion.button>
@@ -494,11 +494,26 @@ const UserDashboard = () => {
                                     <div className="relative h-full p-10 flex flex-col justify-between items-start text-[var(--text-primary)] text-left">
                                         <HandHeart className="w-12 h-12 mb-4 text-[var(--accent)]" />
                                         <div>
-                                            <h3 className="text-3xl font-black brand-font mb-2">Offer a Donation</h3>
-                                            <p className="text-[var(--text-muted)] font-medium opacity-80 max-w-xs">Become a hero. Schedule your next donation session at a nearby camp.</p>
+                                            <h3 className="text-2xl font-black brand-font mb-2">Offer Donation</h3>
+                                            <p className="text-[var(--text-muted)] font-medium opacity-80 text-xs">Become a hero. Schedule your next donation session.</p>
                                         </div>
                                     </div>
                                 </motion.button>
+
+                                <Link 
+                                    to="/camps"
+                                    className="group relative h-64 rounded-[3rem] overflow-hidden bg-indigo-600 shadow-xl border border-white/5 no-underline block"
+                                >
+                                    <img src="/images/previews/camps.png" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" alt="Camps" />
+                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 to-transparent group-hover:scale-110 transition-transform duration-700"></div>
+                                    <div className="relative h-full p-10 flex flex-col justify-between items-start text-white text-left">
+                                        <MapPin className="w-12 h-12 mb-4" />
+                                        <div>
+                                            <h3 className="text-2xl font-black brand-font mb-2">Active Camps</h3>
+                                            <p className="text-indigo-100 font-medium opacity-80 text-xs">Locate mission-critical donation nodes in real-time.</p>
+                                        </div>
+                                    </div>
+                                </Link>
                             </div>
                         </motion.div>
                     )}

@@ -181,9 +181,19 @@ const Register = () => {
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden lg:flex flex-[1] relative flex-col justify-center px-16 xl:px-24 z-10"
+        className="hidden lg:flex flex-[1] relative flex-col justify-center px-16 xl:px-24 z-10 group"
       >
-        <Link to="/" className="absolute top-12 left-16 flex items-center gap-4 no-underline group">
+        <div className="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
+          <h2 className="text-4xl font-black text-white brand-font tracking-tight mb-4">Registration Protocol</h2>
+          <p className="text-white/60 font-bold uppercase tracking-widest text-xs">Initialize your identity in the clinical grid</p>
+        </div>
+        <img 
+          src="/images/previews/register.png" 
+          className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-[3s]" 
+          alt="Register Preview" 
+        />
+        <div className="absolute inset-0 bg-indigo-600/10 mix-blend-overlay"></div>
+        <Link to="/" className="absolute top-12 left-16 flex items-center gap-4 no-underline group z-30">
           <div className="w-12 h-12 bg-gradient-to-br from-[#dc143c] to-[#8b0000] rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 group-hover:scale-110 transition-transform duration-500">
             <Droplets size={24} color="#fff" />
           </div>
