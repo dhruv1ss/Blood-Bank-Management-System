@@ -10,17 +10,23 @@ import {
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 
-const StatCard = ({ label, value, icon: Icon, color }) => (
-    <div className="bg-[var(--bg-secondary)] backdrop-blur-[40px] p-8 rounded-[2.5rem] border border-[var(--border)] shadow-[var(--shadow)] group hover:border-[var(--accent)]/50 transition-all duration-500 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--accent)]/5 rounded-bl-[100%] z-0 transition-transform group-hover:scale-110"></div>
+const StatCard = ({ label, value, icon: Icon, color, glowColor }) => (
+    <motion.div 
+        whileHover={{ scale: 1.02, y: -5 }}
+        className="bg-[var(--bg-card)] backdrop-blur-3xl p-8 rounded-[3rem] border border-[var(--border)] shadow-2xl relative overflow-hidden group transition-all duration-500"
+    >
+        <div className={`absolute top-0 right-0 w-32 h-32 ${glowColor} blur-[60px] opacity-0 group-hover:opacity-20 transition-opacity duration-700`}></div>
         <div className="relative z-10">
-            <div className={`w-12 h-12 ${color} rounded-2xl flex items-center justify-center mb-6 shadow-xl`}>
-                {Icon && <Icon className="w-6 h-6 text-white" />}
+            <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center mb-6 shadow-2xl group-hover:rotate-6 transition-transform duration-500`}>
+                {Icon && <Icon className="w-7 h-7 text-white" />}
             </div>
-            <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-[0.2em]">{label}</p>
-            <h2 className="text-5xl font-black text-[var(--text-primary)] brand-font mt-2 tracking-tight">{value ?? '–'}</h2>
+            <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-[0.4em] mb-1">{label}</p>
+            <h2 className="text-5xl font-black text-[var(--text-primary)] brand-font tracking-tight flex items-baseline gap-2">
+                {value ?? '–'}
+                <span className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest">{label === 'Blood Stock' ? 'Units' : 'Active'}</span>
+            </h2>
         </div>
-    </div>
+    </motion.div>
 );
 
 const AdminDashboard = () => {
@@ -263,46 +269,69 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className="min-h-[calc(100vh-80px)] bg-[var(--bg-primary)] flex flex-col md:flex-row relative overflow-hidden">
+        <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col md:flex-row relative overflow-hidden selection:bg-[#dc143c]/30 selection:text-white">
+            {/* Cinematic Background */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <img src="/images/sanctuary_bg.png" className="w-full h-full object-cover opacity-[0.03] scale-110" alt="" />
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,_#dc143c15,_transparent)]"></div>
             </div>
 
-            {/* Sidebar */}
-            <motion.div initial={{ x: -80, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                className="w-full md:w-80 bg-slate-950 text-white flex flex-col z-10 md:min-h-[calc(100vh-80px)] border-r border-white/5 shadow-[20px_0_40px_rgba(0,0,0,0.4)] relative">
-                <div className="p-10 hidden md:block">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-900/40">
-                             <Activity className="w-6 h-6 text-white" />
+            {/* Sidebar - Floating Nexus Pillar */}
+            <motion.div 
+                initial={{ x: -100, opacity: 0 }} 
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ type: "spring", damping: 30, stiffness: 100 }}
+                className="w-full md:w-80 bg-[var(--bg-card)] backdrop-blur-3xl border-r border-[var(--border)] p-8 flex flex-col z-20 relative overflow-y-auto custom-scrollbar"
+            >
+                <div className="mb-12 px-2">
+                    <div className="flex items-center gap-4 mb-10">
+                        <div className="w-12 h-12 bg-gradient-to-br from-[#dc143c] to-[#9b0023] rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(220,20,60,0.3)] rotate-3">
+                             <Activity className="w-7 h-7 text-white" />
                         </div>
-                        <h2 className="text-2xl font-black brand-font tracking-tighter uppercase">Nexus</h2>
+                        <div>
+                            <h2 className="text-2xl font-black text-[var(--text-primary)] brand-font tracking-tighter uppercase leading-none">Nexus</h2>
+                            <p className="text-[8px] text-[#dc143c] font-black uppercase tracking-[0.4em] mt-1">Core Command</p>
+                        </div>
                     </div>
-                    <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/5 inline-block">
-                        <p className="text-[var(--accent)] text-[10px] font-black uppercase tracking-[0.2em]">Administrator</p>
+
+                    <div className="p-6 rounded-3xl bg-[var(--bg-primary)] border border-[var(--border)] relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-[#dc143c]/10 rounded-bl-full blur-xl"></div>
+                        <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-[0.3em] mb-2">Current System Op</p>
+                        <p className="text-sm font-black text-[var(--text-primary)] tracking-tight">Admin Terminal 01</p>
                     </div>
                 </div>
-                <nav className="flex md:flex-col gap-3 p-6 md:p-8 overflow-x-auto">
-                    {navItems.map(item => (
-                        <button key={item.id} onClick={() => setActiveSection(item.id)}
-                            className={`flex items-center gap-4 px-6 py-5 rounded-[1.5rem] transition-all duration-500 font-black text-[10px] uppercase tracking-[0.2em] whitespace-nowrap relative group
-                                ${activeSection === item.id
-                                    ? 'bg-white text-slate-950 shadow-2xl shadow-white/10 -translate-y-0.5'
-                                    : 'text-gray-500 hover:text-white hover:bg-white/5'}`}>
-                            <div className="relative">
-                                <item.icon className={`w-5 h-5 shrink-0 ${activeSection === item.id ? 'text-red-600' : ''}`} />
+
+                <nav className="flex flex-col gap-2">
+                    {navItems.map(item => {
+                        const isActive = activeSection === item.id;
+                        return (
+                            <button 
+                                key={item.id} 
+                                onClick={() => setActiveSection(item.id)}
+                                className={`flex items-center justify-between p-5 rounded-2xl transition-all duration-500 group relative
+                                    ${isActive 
+                                        ? 'bg-[#dc143c] text-white shadow-[0_15px_40px_rgba(220,20,60,0.2)] scale-[1.02]' 
+                                        : 'text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--text-primary)]'}`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <item.icon className={`w-5 h-5 transition-transform duration-500 ${isActive ? 'rotate-0' : 'group-hover:scale-110'}`} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{item.label}</span>
+                                </div>
                                 {item.showBadge && (
-                                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+                                    <div className="relative flex h-2 w-2">
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isActive ? 'bg-white' : 'bg-[#dc143c]'}`}></span>
+                                        <span className={`relative inline-flex rounded-full h-2 w-2 ${isActive ? 'bg-white' : 'bg-[#dc143c]'}`}></span>
+                                    </div>
                                 )}
-                                {item.showBadge && (
-                                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-                                )}
-                            </div>
-                            <span className="hidden md:block">{item.label}</span>
-                        </button>
-                    ))}
+                            </button>
+                        );
+                    })}
                 </nav>
+
+                <div className="mt-auto pt-8 border-t border-[var(--border)]">
+                    <button className="w-full p-5 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border)] text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/5 transition-all text-[9px] font-black uppercase tracking-[0.3em]">
+                        Emergency Override
+                    </button>
+                </div>
             </motion.div>
 
             {/* Main Content */}
@@ -311,86 +340,101 @@ const AdminDashboard = () => {
 
                     {/* MONITOR */}
                     {activeSection === 'monitor' && (
-                        <motion.div key="monitor" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] brand-font mb-2 tracking-tight">System Monitor</h1>
-                            <p className="text-[var(--text-muted)] mb-12 font-medium max-w-xl">Real-time infrastructure overview and blood supply analytics.</p>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
-                                <StatCard label="Donors" value={stats.totalUsers} icon={Users} color="bg-blue-500" />
-                                <StatCard label="Orgs" value={stats.totalOrgs} icon={Building2} color="bg-indigo-500" />
-                                <StatCard label="Pending Requests" value={stats.pendingRequests} icon={Clock3} color="bg-yellow-500" />
-                                <StatCard label="Pending Camps" value={stats.pendingCamps} icon={MapPin} color="bg-orange-500" />
-                                <StatCard label="Approved Camps" value={stats.approvedCamps} icon={CheckCircle} color="bg-green-500" />
+                        <motion.div key="monitor" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-7xl mx-auto py-4">
+                            <div className="mb-12">
+                                <h1 className="text-5xl md:text-7xl font-black text-[var(--text-primary)] brand-font mb-4 tracking-tighter">Nexus Monitor<span className="text-[#dc143c]">.</span></h1>
+                                <p className="text-[var(--text-muted)] font-bold uppercase tracking-[0.5em] text-[10px]">Real-time infrastructure overview & global supply nodes</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-20">
+                                <StatCard label="Donors" value={stats.totalUsers} icon={Users} color="bg-blue-600" glowColor="bg-blue-500" />
+                                <StatCard label="Orgs" value={stats.totalOrgs} icon={Building2} color="bg-indigo-600" glowColor="bg-indigo-500" />
+                                <StatCard label="Pending Requests" value={stats.pendingRequests} icon={Clock3} color="bg-amber-600" glowColor="bg-amber-500" />
+                                <StatCard label="Pending Camps" value={stats.pendingCamps} icon={MapPin} color="bg-[var(--accent)]" glowColor="bg-[var(--accent)]" />
+                                <StatCard label="Approved Camps" value={stats.approvedCamps} icon={CheckCircle} color="bg-emerald-600" glowColor="bg-emerald-500" />
                             </div>
                             
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="w-12 h-1 bg-[var(--accent)] rounded-full"></div>
-                                <h3 className="font-black text-[var(--text-primary)] uppercase tracking-widest text-sm">Blood Stock Inventory</h3>
+                            <div className="flex items-center gap-6 mb-12">
+                                <div className="w-16 h-px bg-[var(--border)]"></div>
+                                <h3 className="font-black text-[var(--text-primary)] uppercase tracking-[0.4em] text-xs">Vital Reserve Inventory</h3>
+                                <div className="flex-grow h-px bg-[var(--border)]"></div>
                             </div>
                             
-                            <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
-                                {Object.entries(bloodStock).map(([bg, qty]) => (
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">                                 {Object.entries(bloodStock).map(([bg, qty], idx) => (
                                     <motion.div 
                                         key={bg} 
-                                        whileHover={{ y: -5 }}
-                                        className="bg-[var(--bg-secondary)] backdrop-blur-xl rounded-[2rem] border border-[var(--border)] p-6 text-center shadow-sm hover:shadow-[var(--shadow)] transition-all"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: idx * 0.05 }}
+                                        whileHover={{ y: -8, backgroundColor: 'var(--bg-primary)' }}
+                                        className="bg-[var(--bg-card)] backdrop-blur-2xl rounded-[2.5rem] border border-[var(--border)] p-8 text-center shadow-2xl transition-all group overflow-hidden relative"
                                     >
-                                        <div className="text-[var(--accent)] font-black text-2xl brand-font mb-2">{bg}</div>
-                                        <div className="text-5xl font-black text-[var(--text-primary)] tracking-tighter">{qty}</div>
-                                        <div className="text-[10px] text-[var(--text-muted)] mt-2 uppercase font-black tracking-widest">Units</div>
+                                        <div className="absolute inset-0 bg-gradient-to-b from-[#dc143c]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        <div className="relative z-10">
+                                            <div className="text-[#dc143c] font-black text-3xl brand-font mb-4 drop-shadow-[0_0_10px_rgba(220,20,60,0.5)]">{bg}</div>
+                                            <div className="text-5xl font-black text-[var(--text-primary)] tracking-tighter mb-2 group-hover:scale-110 transition-transform duration-500">{qty}</div>
+                                            <div className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest">Units</div>
+                                        </div>
                                     </motion.div>
                                 ))}
+
                             </div>
                         </motion.div>
                     )}
 
                     {/* BLOOD REQUESTS */}
                     {activeSection === 'requests' && (
-                        <motion.div key="requests" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Blood Requests</h1>
-                            <p className="text-[var(--text-muted)] mb-8 font-medium">Approve or reject incoming blood requests from hospitals.</p>
+                        <motion.div key="requests" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-5xl mx-auto py-4">
+                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Blood Requests<span className="text-[#dc143c]">.</span></h1>
+                            <p className="text-[var(--text-muted)] mb-12 font-bold uppercase tracking-[0.3em] text-[10px]">Approve or reject incoming emergency stock requests</p>
                             
                             <div className="grid gap-6">
                                 {isLoading ? (
-                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Synchronizing Nexus...</div>
+                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Synchronizing Nexus Pulse...</div>
                                 ) : requests.length === 0 ? (
-                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl p-16 rounded-[3rem] border border-[var(--border)] text-center shadow-inner">
-                                        <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--border)] shadow-lg">
+                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-3xl p-20 rounded-[3rem] border border-[var(--border)] text-center shadow-2xl relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-[#dc143c]/5 to-transparent"></div>
+                                        <div className="w-24 h-24 bg-[var(--bg-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-[var(--border)] shadow-2xl">
                                             <FileText className="w-10 h-10 text-[var(--text-muted)]" />
                                         </div>
-                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">Zero pending requests</p>
+                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Zero Pending Uplinks</p>
                                     </div>
                                 ) : (
                                     requests.map(req => (
-                                        <div key={req.id} className="bg-[var(--bg-secondary)] backdrop-blur-xl p-8 rounded-[2.5rem] border border-[var(--border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:border-[var(--accent)]/40 transition-all group shadow-sm hover:shadow-[var(--shadow)] relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 rounded-bl-[100%] z-0"></div>
-                                            <div className="flex items-start gap-8 relative z-10">
-                                                <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-3xl flex flex-col items-center justify-center border border-[var(--border)] group-hover:border-[var(--accent)] shadow-2xl transition-all">
-                                                    <span className="text-[var(--accent)] font-black text-3xl leading-none tracking-tighter">{req.bloodGroup}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mt-1">Type</span>
+                                        <motion.div 
+                                            key={req.id} 
+                                            whileHover={{ scale: 1.01, x: 5 }}
+                                            className="bg-[var(--bg-card)] backdrop-blur-3xl p-10 rounded-[3rem] border border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-10 hover:border-[#dc143c]/40 transition-all group shadow-2xl relative overflow-hidden"
+                                        >
+                                            <div className="absolute top-0 right-0 w-48 h-48 bg-[#dc143c]/5 rounded-bl-[100%] z-0 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <div className="flex items-center gap-10 relative z-10 w-full md:w-auto">
+                                                <div className="w-24 h-24 bg-[var(--bg-primary)] rounded-[2rem] flex flex-col items-center justify-center border border-[var(--border)] group-hover:border-[#dc143c] shadow-2xl transition-all shrink-0">
+                                                    <span className="text-[#dc143c] font-black text-4xl leading-none tracking-tighter drop-shadow-[0_0_8px_rgba(220,20,60,0.4)]">{req.bloodGroup}</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mt-2">Group</span>
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <h3 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">{req.hospitalName}</h3>
-                                                    <div className="flex flex-wrap gap-5">
-                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.15em]">
-                                                            <MapPin className="w-4 h-4 text-[var(--accent)]" /> {req.city}
+                                                <div className="space-y-3">
+                                                    <h3 className="text-3xl font-black text-[var(--text-primary)] tracking-tight leading-none">{req.hospitalName}</h3>
+                                                    <div className="flex flex-wrap gap-6 items-center">
+                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">
+                                                            <MapPin className="w-4 h-4 text-[#dc143c]" /> {req.city}
                                                         </span>
-                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.15em]">
-                                                            <Droplet className="w-4 h-4 text-[var(--accent)]" /> {req.units} Units
+                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">
+                                                            <Droplet className="w-4 h-4 text-[#dc143c]" /> {req.units} Units
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-4 w-full md:w-auto relative z-10 mt-4 md:mt-0">
+                                            <div className="flex gap-4 w-full md:w-auto relative z-10">
                                                 <button onClick={() => handleRequestAction(req.id, 'REJECTED')}
-                                                    className="flex-grow md:flex-none px-8 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
-                                                    Dismiss
+                                                    className="flex-grow md:flex-none px-10 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all whitespace-nowrap">
+                                                    Abort
                                                 </button>
                                                 <button onClick={() => handleRequestAction(req.id, 'APPROVED')}
-                                                    className="flex-grow md:flex-none px-12 py-5 rounded-2xl bg-slate-950 text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-black/40 hover:-translate-y-1 transition-all">
-                                                    Validate
+                                                    className="flex-grow md:flex-none px-14 py-5 rounded-2xl bg-[var(--text-primary)] text-[var(--bg-primary)] font-black text-[10px] uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all whitespace-nowrap">
+                                                    Authorize
                                                 </button>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))
                                 )}
                             </div>
@@ -399,143 +443,151 @@ const AdminDashboard = () => {
 
                     {/* DONATION OFFERS */}
                     {activeSection === 'donations' && (
-                        <motion.div key="donations" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Donation Pipeline</h1>
-                            <p className="text-[var(--text-muted)] mb-8 font-medium">Verify and approve new blood donation offers from the community.</p>
+                        <motion.div key="donations" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-5xl mx-auto py-4">
+                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Donation Pipeline<span className="text-[#dc143c]">.</span></h1>
+                            <p className="text-[var(--text-muted)] mb-12 font-bold uppercase tracking-[0.3em] text-[10px]">Verify and intake new community contributions</p>
                             
                             <div className="grid gap-6">
                                 {isLoading ? (
-                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Scanning Bio-Data...</div>
+                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Decoding Bio-Signals...</div>
                                 ) : pendingDonations.length === 0 ? (
-                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl p-16 rounded-[3rem] border border-[var(--border)] text-center shadow-inner">
-                                        <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--border)] shadow-lg">
+                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-3xl p-20 rounded-[3rem] border border-[var(--border)] text-center shadow-2xl">
+                                        <div className="w-24 h-24 bg-[var(--bg-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-[var(--border)] shadow-2xl">
                                             <HandHeart className="w-10 h-10 text-[var(--text-muted)]" />
                                         </div>
-                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">No pending offers</p>
+                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">No active intake streams</p>
                                     </div>
                                 ) : (
                                     pendingDonations.map(don => (
-                                        <div key={don.id} className="bg-[var(--bg-secondary)] backdrop-blur-xl p-8 rounded-[2.5rem] border border-[var(--border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:border-[var(--accent)]/40 transition-all group shadow-sm hover:shadow-[var(--shadow)] relative overflow-hidden">
-                                            <div className="flex items-start gap-8 relative z-10">
-                                                <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-3xl flex flex-col items-center justify-center border border-[var(--border)] group-hover:border-[var(--accent)] shadow-2xl transition-all">
-                                                    <span className="text-[var(--accent)] font-black text-3xl leading-none tracking-tighter">{don.bloodGroup}</span>
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mt-1">Group</span>
+                                        <motion.div 
+                                            key={don.id} 
+                                            whileHover={{ scale: 1.01, x: 5 }}
+                                            className="bg-[var(--bg-card)] backdrop-blur-3xl p-10 rounded-[3rem] border border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-10 hover:border-[#dc143c]/40 transition-all group shadow-2xl relative overflow-hidden"
+                                        >
+                                            <div className="flex items-center gap-10 relative z-10 w-full md:w-auto">
+                                                <div className="w-24 h-24 bg-[var(--bg-primary)] rounded-[2rem] flex flex-col items-center justify-center border border-[var(--border)] group-hover:border-[#dc143c] shadow-2xl transition-all shrink-0">
+                                                    <span className="text-[#dc143c] font-black text-4xl leading-none tracking-tighter drop-shadow-[0_0_8px_rgba(220,20,60,0.4)]">{don.bloodGroup}</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mt-2">Type</span>
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <h3 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">{don.user?.name || 'Unknown Donor'}</h3>
-                                                    <div className="flex flex-wrap gap-5">
-                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.15em]">
+                                                <div className="space-y-3">
+                                                    <h3 className="text-3xl font-black text-[var(--text-primary)] tracking-tight leading-none">{don.user?.name || 'Anonymous Donor'}</h3>
+                                                    <div className="flex flex-wrap gap-6 items-center">
+                                                        <span className="px-4 py-2 bg-[var(--bg-secondary)] rounded-xl text-[10px] text-[var(--text-secondary)] font-black uppercase tracking-[0.2em]">
                                                             Age: {don.age}
                                                         </span>
-                                                        <span className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.15em]">
-                                                            Condition: {don.condition || 'Healthy'}
+                                                        <span className="px-4 py-2 bg-[var(--bg-secondary)] rounded-xl text-[10px] text-[var(--text-secondary)] font-black uppercase tracking-[0.2em]">
+                                                            Cond: {don.condition || 'Verified'}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-4 w-full md:w-auto relative z-10 mt-4 md:mt-0">
+                                            <div className="flex gap-4 w-full md:w-auto relative z-10">
                                                 <button onClick={() => handleDonationAction(don.id, 'REJECTED')}
-                                                    className="flex-grow md:flex-none px-8 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
-                                                    Reject
+                                                    className="flex-grow md:flex-none px-10 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all whitespace-nowrap">
+                                                    Decline
                                                 </button>
                                                 <button onClick={() => handleDonationAction(don.id, 'APPROVED')}
-                                                    className="flex-grow md:flex-none px-12 py-5 rounded-2xl bg-slate-950 text-white font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-black/40 hover:-translate-y-1 transition-all">
-                                                    Accept
+                                                    className="flex-grow md:flex-none px-14 py-5 rounded-2xl bg-[var(--text-primary)] text-[var(--bg-primary)] font-black text-[10px] uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all whitespace-nowrap">
+                                                    Ingest
                                                 </button>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))
                                 )}
                             </div>
                         </motion.div>
                     )}
-
-                    {/* CAMP APPROVALS */}
+                    {/* CAMP OPERATIONS */}
                     {activeSection === 'camps' && (
-                        <motion.div key="camps" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Camp Operations</h1>
-                            <p className="text-[var(--text-muted)] mb-8 font-medium">Coordinate and authorize regional donation camps.</p>
+                        <motion.div key="camps" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-6xl mx-auto py-4">
+                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Camp Operations<span className="text-[#dc143c]">.</span></h1>
+                            <p className="text-[var(--text-muted)] mb-12 font-bold uppercase tracking-[0.3em] text-[10px]">Coordinate and authorize regional donation infrastructure</p>
                             
-                            <div className="grid gap-8">
+                            <div className="grid gap-10">
                                 {isLoading ? (
-                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Triangulating Coordinates...</div>
+                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Triangulating Global Nodes...</div>
                                 ) : pendingCamps.length === 0 ? (
-                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl p-16 rounded-[3rem] border border-[var(--border)] text-center shadow-inner">
-                                        <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--border)] shadow-lg">
+                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-3xl p-20 rounded-[3rem] border border-[var(--border)] text-center shadow-2xl relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-[#dc143c]/5 to-transparent"></div>
+                                        <div className="w-24 h-24 bg-[var(--bg-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-[var(--border)] shadow-2xl">
                                             <MapPin className="w-10 h-10 text-[var(--text-muted)]" />
                                         </div>
-                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">No pending camps</p>
+                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Zero Pending Deployments</p>
                                     </div>
                                 ) : (
                                     pendingCamps.map(camp => (
-                                        <div key={camp.id} className="bg-[var(--bg-secondary)] backdrop-blur-[60px] p-10 rounded-[3rem] border border-[var(--border)] shadow-xl hover:border-[var(--accent)]/50 transition-all relative overflow-hidden group">
-                                            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)]/5 rounded-bl-[100%] z-0"></div>
+                                        <motion.div 
+                                            key={camp.id} 
+                                            whileHover={{ scale: 1.01 }}
+                                            className="bg-[var(--bg-card)]/60 backdrop-blur-3xl p-12 rounded-[4rem] border border-[var(--border)] shadow-[0_30px_60px_rgba(0,0,0,0.4)] relative overflow-hidden group"
+                                        >
+                                            <div className="absolute top-0 right-0 w-96 h-96 bg-[#dc143c]/5 rounded-bl-full z-0 blur-[100px]"></div>
                                             <div className="relative z-10">
-                                                <div className="flex justify-between items-start flex-wrap gap-6 mb-10">
+                                                <div className="flex justify-between items-start flex-wrap gap-8 mb-12">
                                                     <div>
-                                                        <h3 className="text-3xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-2">{camp.name}</h3>
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></div>
-                                                            <p className="text-[10px] text-[var(--accent)] font-black uppercase tracking-[0.2em]">
-                                                                Organized by {camp.organization?.orgName || camp.organization?.name}
+                                                        <h3 className="text-4xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-3">{camp.name}</h3>
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-3 h-3 rounded-full bg-[#dc143c] animate-pulse shadow-[0_0_12px_#dc143c]"></div>
+                                                            <p className="text-[10px] text-[#dc143c] font-black uppercase tracking-[0.3em]">
+                                                                Commanded by {camp.organization?.orgName || camp.organization?.name}
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <span className="px-5 py-2.5 bg-slate-950 text-white rounded-2xl text-[9px] font-black uppercase tracking-[0.2em]">
-                                                        Pending Review
+                                                    <span className="px-6 py-3 bg-[var(--bg-secondary)] text-[var(--text-muted)] border border-[var(--border)] rounded-2xl text-[10px] font-black uppercase tracking-[0.3em]">
+                                                        Strategic Review
                                                     </span>
                                                 </div>
                                                 
-                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-                                                    <div className="space-y-1">
-                                                        <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Date</p>
-                                                        <div className="flex items-center gap-2 text-[var(--text-primary)] font-bold">
-                                                            <Calendar className="w-4 h-4 text-[var(--accent)]" />
+                                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                                                    <div className="space-y-2">
+                                                        <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">Temporal Window</p>
+                                                        <div className="flex items-center gap-3 text-[var(--text-primary)] font-black text-sm">
+                                                            <Calendar className="w-5 h-5 text-[#dc143c]" />
                                                             {(() => {
                                                                 const d = new Date(camp.date);
                                                                 return (camp.date && !isNaN(d.getTime())) ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'TBA';
                                                             })()}
                                                         </div>
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Time Buffer</p>
-                                                        <div className="flex items-center gap-2 text-[var(--text-primary)] font-bold">
-                                                            <Clock3 className="w-4 h-4 text-[var(--accent)]" />
+                                                    <div className="space-y-2">
+                                                        <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">Active Shift</p>
+                                                        <div className="flex items-center gap-3 text-[var(--text-primary)] font-black text-sm">
+                                                            <Clock3 className="w-5 h-5 text-[#dc143c]" />
                                                             {camp.startTime} – {camp.endTime}
                                                         </div>
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Location</p>
-                                                        <div className="flex items-center gap-2 text-[var(--text-primary)] font-bold">
-                                                            <MapPin className="w-4 h-4 text-[var(--accent)]" />
+                                                    <div className="space-y-2">
+                                                        <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">Zone</p>
+                                                        <div className="flex items-center gap-3 text-[var(--text-primary)] font-black text-sm">
+                                                            <MapPin className="w-5 h-5 text-[#dc143c]" />
                                                             {camp.city}
                                                         </div>
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Capacity</p>
-                                                        <div className="flex items-center gap-2 text-[var(--text-primary)] font-bold">
-                                                            <Users className="w-4 h-4 text-[var(--accent)]" />
-                                                            {camp.totalSlots} Slots
+                                                    <div className="space-y-2">
+                                                        <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">Throughput</p>
+                                                        <div className="flex items-center gap-3 text-[var(--text-primary)] font-black text-sm">
+                                                            <Users className="w-5 h-5 text-[#dc143c]" />
+                                                            {camp.totalSlots} Potential Units
                                                         </div>
                                                     </div>
                                                 </div>
                                                 
-                                                <div className="bg-[var(--bg-primary)]/50 border border-[var(--border)] p-6 rounded-2xl mb-8">
-                                                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-medium">{camp.address}</p>
+                                                <div className="bg-[var(--bg-secondary)]/50 border border-[var(--border)] p-8 rounded-[2rem] mb-12">
+                                                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-bold tracking-tight italic">"{camp.address}"</p>
                                                 </div>
-
-                                                <div className="flex flex-col md:flex-row gap-4">
+ 
+                                                <div className="flex flex-col md:flex-row gap-6">
                                                     <button onClick={() => handleCampAction(camp.id, 'APPROVED')}
-                                                        className="flex-grow bg-slate-950 text-white px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-black/40 hover:-translate-y-1 transition-all">
-                                                        Authorize Operation
+                                                        className="flex-grow bg-[var(--text-primary)] text-[var(--bg-primary)] px-12 py-6 rounded-3xl font-black text-[11px] uppercase tracking-[0.3em] shadow-2xl hover:-translate-y-1 transition-all">
+                                                        Authorize Deployment
                                                     </button>
                                                     <button onClick={() => handleCampAction(camp.id, 'REJECTED')}
-                                                        className="px-10 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
-                                                        Reject
+                                                        className="px-12 py-6 rounded-3xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[11px] uppercase tracking-[0.3em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
+                                                        Deny Access
                                                     </button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))
                                 )}
                             </div>
@@ -544,19 +596,17 @@ const AdminDashboard = () => {
 
                     {/* PROFILE EDITS */}
                     {activeSection === 'profile-edits' && (
-                        <motion.div key="profile-edits" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Profile Edit Requests</h1>
-                            <p className="text-[var(--text-muted)] mb-8 font-medium">Review and validate user profile change requests.</p>
+                        <motion.div key="profile-edits" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-6xl mx-auto py-4">
+                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Profile Validation<span className="text-[#dc143c]">.</span></h1>
+                            <p className="text-[var(--text-muted)] mb-12 font-bold uppercase tracking-[0.3em] text-[10px]">Verify and authorize subject identity modifications</p>
                             
-                            <div className="grid gap-6">
+                            <div className="grid gap-8">
                                 {isLoading ? (
-                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Loading Requests...</div>
+                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Scanning Bio-Profiles...</div>
                                 ) : profileEdits.length === 0 ? (
-                                    <div className="bg-[var(--bg-secondary)]/50 backdrop-blur-xl p-16 rounded-[3rem] border border-[var(--border)] text-center shadow-inner">
-                                        <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--border)] shadow-lg">
-                                            <UserCheck className="w-10 h-10 text-[var(--text-muted)]" />
-                                        </div>
-                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">No pending profile edits</p>
+                                    <div className="bg-[var(--bg-secondary)]/50 p-24 rounded-[4rem] border border-[var(--border)] text-center shadow-2xl">
+                                        <UserCheck className="w-20 h-20 mx-auto mb-8 text-[var(--text-muted)]" />
+                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Identity Buffer Clear</p>
                                     </div>
                                 ) : (
                                     profileEdits.map(req => {
@@ -565,66 +615,63 @@ const AdminDashboard = () => {
                                             proposed = typeof req.proposedData === 'string' ? JSON.parse(req.proposedData) : req.proposedData || {};
                                         } catch(e) { console.error('Error parsing JSON for proposedData', e); }
                                         return (
-                                        <div key={req.id} className="bg-[var(--bg-secondary)] backdrop-blur-xl p-8 rounded-[2.5rem] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-all group shadow-sm hover:shadow-[var(--shadow)] relative overflow-hidden flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
-                                            
-                                            <div className="flex gap-8 items-center w-full md:w-auto overflow-hidden">
-                                                {/* Visual Avatar comparison if provided */}
-                                                <div className="flex gap-4 items-center shrink-0">
-                                                    <div className="text-center">
-                                                        <div className="w-16 h-16 rounded-[1rem] bg-[var(--bg-primary)] border border-rose-500/30 overflow-hidden mb-2">
-                                                            {req.user?.avatar ? <img src={req.user.avatar} className="w-full h-full object-cover" /> : <User className="w-8 h-8 m-4 text-[var(--text-muted)]"/>}
+                                        <motion.div 
+                                            key={req.id} 
+                                            whileHover={{ scale: 1.01 }}
+                                            className="bg-[var(--bg-card)]/60 backdrop-blur-3xl p-10 rounded-[3rem] border border-[var(--border)] hover:border-[#dc143c]/30 transition-all group shadow-2xl relative overflow-hidden flex flex-col lg:flex-row gap-10 items-center justify-between"
+                                        >
+                                            <div className="flex flex-col md:flex-row gap-10 items-center w-full lg:w-auto">
+                                                <div className="flex gap-6 items-center shrink-0">
+                                                    <div className="text-center group-hover:scale-105 transition-transform duration-500">
+                                                        <div className="w-20 h-20 rounded-3xl bg-[var(--bg-primary)] border border-red-500/20 overflow-hidden mb-3 shadow-2xl">
+                                                            {req.user?.avatar ? <img src={req.user.avatar} className="w-full h-full object-cover" /> : <User className="w-8 h-8 m-6 text-[var(--text-muted)]"/>}
                                                         </div>
-                                                        <span className="text-[8px] font-black uppercase text-rose-500">Current</span>
+                                                        <span className="text-[9px] font-black uppercase tracking-widest text-red-500/60">Legacy</span>
                                                     </div>
-                                                    <div className="w-8 h-0 border-t border-dashed border-[var(--text-muted)]"></div>
-                                                    <div className="text-center">
-                                                        <div className="w-16 h-16 rounded-[1rem] bg-[var(--bg-primary)] border border-green-500/50 overflow-hidden mb-2 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-                                                             {proposed.avatar ? <img src={proposed.avatar} className="w-full h-full object-cover" /> : <User className="w-8 h-8 m-4 text-[var(--text-muted)]"/>}
+                                                    <div className="w-12 h-px bg-gradient-to-r from-red-500/20 to-green-500/20"></div>
+                                                    <div className="text-center group-hover:scale-105 transition-transform duration-500">
+                                                        <div className="w-20 h-20 rounded-3xl bg-[var(--bg-primary)] border border-emerald-500/40 overflow-hidden mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                                                             {proposed.avatar ? <img src={proposed.avatar} className="w-full h-full object-cover" /> : <User className="w-8 h-8 m-6 text-[var(--text-muted)]"/>}
                                                         </div>
-                                                        <span className="text-[8px] font-black uppercase text-green-500">Proposed</span>
+                                                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-500/60">Target</span>
                                                     </div>
                                                 </div>
 
-                                                {/* Textual comparison */}
-                                                <div className="space-y-3 flex-grow min-w-0">
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <div className="truncate">
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-1">Name</p>
-                                                            <p className="text-sm font-bold text-[var(--text-primary)] truncate">{req.user?.name}</p>
-                                                            {proposed.name && proposed.name !== req.user?.name && (
-                                                                <p className="text-sm font-bold text-green-500 truncate mt-1">→ {proposed.name}</p>
-                                                            )}
+                                                <div className="space-y-4 flex-grow min-w-0">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                        <div className="bg-[var(--bg-secondary)]/50 p-4 rounded-2xl border border-[var(--border)]">
+                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-2">Subject Name</p>
+                                                            <div className="flex flex-col gap-1">
+                                                                <p className="text-sm font-bold text-[var(--text-muted)] line-through opacity-50">{req.user?.name}</p>
+                                                                {proposed.name && proposed.name !== req.user?.name && (
+                                                                    <p className="text-sm font-black text-emerald-400 tracking-tight"> {proposed.name}</p>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                        <div className="truncate">
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-1">Phone</p>
-                                                            <p className="text-sm font-bold text-[var(--text-primary)] truncate">{req.user?.phone || 'None'}</p>
-                                                            {proposed.phone && proposed.phone !== req.user?.phone && (
-                                                                <p className="text-sm font-bold text-green-500 truncate mt-1">→ {proposed.phone}</p>
-                                                            )}
-                                                        </div>
-                                                        <div className="col-span-2 truncate">
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-1">Location</p>
-                                                            <p className="text-sm font-bold text-[var(--text-primary)] truncate">{req.user?.city || 'No City'}, {req.user?.state || 'No State'}</p>
-                                                            {(proposed.city || proposed.state) && (proposed.city !== req.user?.city || proposed.state !== req.user?.state) && (
-                                                                <p className="text-sm font-bold text-green-500 truncate mt-1">→ {proposed.city || req.user?.city}, {proposed.state || req.user?.state}</p>
-                                                            )}
+                                                        <div className="bg-[var(--bg-secondary)]/50 p-4 rounded-2xl border border-[var(--border)]">
+                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-2">Contact Vector</p>
+                                                            <div className="flex flex-col gap-1">
+                                                                <p className="text-sm font-bold text-[var(--text-muted)] opacity-50">{req.user?.phone || 'NULL'}</p>
+                                                                {proposed.phone && proposed.phone !== req.user?.phone && (
+                                                                    <p className="text-sm font-black text-emerald-400 tracking-tight"> {proposed.phone}</p>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className="flex gap-4 w-full md:w-auto shrink-0 border-t md:border-t-0 md:border-l border-[var(--border)] pt-4 md:pt-0 md:pl-6 mt-2 md:mt-0">
+                                            <div className="flex gap-4 w-full lg:w-auto shrink-0 border-t lg:border-t-0 lg:border-l border-[var(--border)] pt-8 lg:pt-0 lg:pl-10">
                                                 <button onClick={() => handleProfileEditAction(req.id, 'REJECTED')}
-                                                    className="flex-grow md:flex-none px-6 py-4 rounded-xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[9px] uppercase tracking-[0.2em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
-                                                    Reject
+                                                    className="flex-grow lg:flex-none px-10 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/30 transition-all">
+                                                    Discard
                                                 </button>
                                                 <button onClick={() => handleProfileEditAction(req.id, 'APPROVED')}
-                                                    className="flex-grow md:flex-none px-8 py-4 rounded-xl bg-green-500 text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-lg shadow-green-500/30 hover:-translate-y-1 transition-all">
-                                                    Accept
+                                                    className="flex-grow lg:flex-none px-12 py-5 rounded-2xl bg-emerald-600 text-white font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl hover:-translate-y-1 transition-all">
+                                                    Commit
                                                 </button>
                                             </div>
-
-                                        </div>
+                                        </motion.div>
                                         );
                                     })
                                 )}
@@ -634,50 +681,53 @@ const AdminDashboard = () => {
 
                     {/* USERS */}
                     {activeSection === 'users' && (
-                        <motion.div key="users" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <div className="flex justify-between items-end mb-12">
+                        <motion.div key="users" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-7xl mx-auto py-4">
+                            <div className="flex justify-between items-end mb-16">
                                 <div>
-                                    <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Subject Registry</h1>
-                                    <p className="text-[var(--text-muted)] font-medium">Directory of all registered donors and users.</p>
+                                    <h1 className="text-5xl font-black text-[var(--text-primary)] brand-font mb-3">Subject Registry<span className="text-[#dc143c]">.</span></h1>
+                                    <p className="text-[var(--text-muted)] font-bold uppercase tracking-[0.4em] text-[10px]">Directory of all authenticated life-donors</p>
                                 </div>
-                                <button onClick={fetchUsers} className="p-4 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border)] text-[var(--text-primary)] hover:border-[var(--accent)] transition-all group">
-                                    <Activity className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+                                <button onClick={fetchUsers} className="w-16 h-16 rounded-3xl bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] flex items-center justify-center hover:bg-[#dc143c] hover:text-white transition-all group shadow-2xl">
+                                    <Activity className={`w-6 h-6 transition-all duration-700 ${isLoading ? 'animate-spin' : 'group-hover:rotate-180'}`} />
                                 </button>
                             </div>
                             
                             {isLoading ? (
-                                <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Retrieving Profiles...</div>
-                            ) : users.length === 0 ? (
-                                <div className="bg-[var(--bg-secondary)]/50 p-20 rounded-[3rem] border border-[var(--border)] text-center">
-                                    <Users className="w-16 h-16 mx-auto mb-6 text-[var(--text-muted)] opacity-20" />
-                                    <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-xs">Registry is empty</p>
+                                <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Accessing Core Databases...</div>
+                             ) : users.length === 0 ? (
+                                <div className="bg-[var(--bg-secondary)]/50 p-24 rounded-[4rem] border border-[var(--border)] text-center shadow-2xl">
+                                    <Users className="w-20 h-20 mx-auto mb-8 text-[var(--text-muted)]" />
+                                    <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Registry is Currently Null</p>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {users.map(u => (
-                                        <motion.div key={u.id} whileHover={{ y: -8 }}
-                                            className="bg-[var(--bg-secondary)] backdrop-blur-xl p-8 rounded-[2.5rem] border border-[var(--border)] hover:border-[var(--accent)]/50 transition-all group relative overflow-hidden">
-                                            <div className="flex justify-between items-start mb-6">
-                                                <div className="w-14 h-14 bg-[var(--bg-primary)] rounded-2xl flex items-center justify-center border border-[var(--border)] group-hover:bg-[var(--accent)] transition-all">
-                                                    <User className="w-6 h-6 text-[var(--text-primary)] group-hover:text-white" />
+                                        <motion.div 
+                                            key={u.id} 
+                                            whileHover={{ y: -10, backgroundColor: 'var(--bg-secondary)' }}
+                                            className="bg-[var(--bg-card)]/60 backdrop-blur-3xl p-10 rounded-[3rem] border border-[var(--border)] transition-all group relative overflow-hidden shadow-2xl"
+                                        >
+                                            <div className="flex justify-between items-start mb-10">
+                                                <div className="w-16 h-16 bg-[var(--bg-primary)] rounded-2xl flex items-center justify-center border border-[var(--border)] group-hover:border-[#dc143c] transition-all duration-500 shadow-2xl">
+                                                    <User className="w-7 h-7 text-[var(--text-muted)] group-hover:text-[var(--text-primary)]" />
                                                 </div>
                                                 <button onClick={() => handleRemoveUser(u.id, u.name)}
-                                                    className="p-3 bg-[var(--bg-primary)] border border-[var(--border)] rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100">
-                                                    <Trash2 className="w-4 h-4" />
+                                                    className="w-12 h-12 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center shadow-2xl">
+                                                    <Trash2 className="w-5 h-5" />
                                                 </button>
                                             </div>
-                                            <h3 className="text-xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-4">{u.name}</h3>
-                                            <div className="space-y-3">
-                                                <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest truncate">
-                                                    <Mail className="w-3.5 h-3.5 text-[var(--accent)]" /> {u.email}
+                                            <h3 className="text-2xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-6">{u.name}</h3>
+                                            <div className="space-y-5">
+                                                <div className="flex items-center gap-4 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] truncate">
+                                                    <Mail className="w-4 h-4 text-[#dc143c]" /> {u.email}
                                                 </div>
-                                                <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">
-                                                    <Droplet className="w-3.5 h-3.5 text-[var(--accent)]" /> Blood {u.bloodGroup || 'NA'}
+                                                <div className="flex items-center gap-4 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">
+                                                    <Droplet className="w-4 h-4 text-[#dc143c]" /> Factor: {u.bloodGroup || 'UNK'}
                                                 </div>
                                             </div>
-                                            <div className="mt-8 pt-6 border-t border-[var(--border)] flex justify-between items-center">
-                                                <span className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Type</span>
-                                                <span className="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-lg text-[9px] font-black uppercase tracking-widest">Donor</span>
+                                            <div className="mt-10 pt-8 border-t border-[var(--border)] flex justify-between items-center">
+                                                <span className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Protocol</span>
+                                                <span className="px-4 py-1.5 bg-blue-500/10 text-blue-400 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] border border-blue-500/20">Active Donor</span>
                                             </div>
                                         </motion.div>
                                     ))}
@@ -688,49 +738,56 @@ const AdminDashboard = () => {
 
                     {/* ORGANIZATIONS */}
                     {activeSection === 'organizations' && (
-                        <motion.div key="organizations" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                           <div className="mb-12">
-                                <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Partner Organizations</h1>
-                                <p className="text-[var(--text-muted)] font-medium">Management of collaborating clinics and donation centers.</p>
+                        <motion.div key="organizations" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-7xl mx-auto py-4">
+                           <div className="mb-16">
+                                <h1 className="text-5xl font-black text-[var(--text-primary)] brand-font mb-3">Nexus Partners<span className="text-[#dc143c]">.</span></h1>
+                                <p className="text-[var(--text-muted)] font-bold uppercase tracking-[0.4em] text-[10px]">Management of collaborating clinical nodes & supply centers</p>
                             </div>
                             
                             {isLoading ? (
-                                <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Connecting to Nexus...</div>
+                                <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Establishing Secure Uplinks...</div>
                             ) : orgs.length === 0 ? (
-                                <div className="bg-[var(--bg-secondary)]/50 p-20 rounded-[3rem] border border-[var(--border)] text-center">
-                                    <Building2 className="w-16 h-16 mx-auto mb-6 text-[var(--text-muted)] opacity-20" />
-                                    <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-xs">No partners found</p>
+                                <div className="bg-[var(--bg-secondary)]/50 p-24 rounded-[4rem] border border-[var(--border)] text-center shadow-2xl relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-b from-[#dc143c]/5 to-transparent"></div>
+                                    <div className="w-24 h-24 bg-[var(--bg-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-[var(--border)] shadow-2xl">
+                                        <Building2 className="w-10 h-10 text-[var(--text-muted)]" />
+                                    </div>
+                                    <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Partner Network Empty</p>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {orgs.map(org => (
-                                        <motion.div key={org.id} whileHover={{ y: -8 }}
-                                            className="bg-[var(--bg-secondary)] backdrop-blur-xl p-8 rounded-[2.5rem] border border-[var(--border)] hover:border-[var(--accent)]/50 transition-all group relative overflow-hidden">
-                                            <div className="flex justify-between items-start mb-6">
-                                                <div className="w-14 h-14 bg-[var(--bg-primary)] rounded-2xl flex items-center justify-center border border-[var(--border)] group-hover:bg-indigo-600 transition-all">
-                                                    <Building2 className="w-6 h-6 text-[var(--text-primary)] group-hover:text-white" />
+                                        <motion.div 
+                                            key={org.id} 
+                                            whileHover={{ y: -10, backgroundColor: 'var(--bg-secondary)' }}
+                                            className="bg-[var(--bg-card)]/60 backdrop-blur-3xl p-10 rounded-[3rem] border border-[var(--border)] transition-all group relative overflow-hidden shadow-2xl"
+                                        >
+                                            <div className="flex justify-between items-start mb-10">
+                                                <div className="w-16 h-16 bg-[var(--bg-primary)] rounded-2xl flex items-center justify-center border border-[var(--border)] group-hover:border-indigo-500 transition-all duration-500 shadow-2xl">
+                                                    <Building2 className="w-7 h-7 text-[var(--text-muted)] group-hover:text-indigo-500" />
                                                 </div>
                                                 <button onClick={() => handleRemoveUser(org.id, org.orgName || org.name)}
-                                                    className="p-3 bg-[var(--bg-primary)] border border-[var(--border)] rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100">
-                                                    <Trash2 className="w-4 h-4" />
+                                                    className="w-12 h-12 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center shadow-2xl">
+                                                    <Trash2 className="w-5 h-5" />
                                                 </button>
                                             </div>
-                                            <h3 className="text-xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-2">{org.orgName || org.name}</h3>
-                                            <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-6">Partner Center</p>
-                                            <div className="space-y-4">
-                                                <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest truncate">
-                                                    <Mail className="w-3.5 h-3.5 text-indigo-500" /> {org.email}
+                                            <h3 className="text-2xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-2 truncate">{org.orgName || org.name}</h3>
+                                            <p className="text-[10px] text-indigo-500 font-black uppercase tracking-[0.2em] mb-8">Clinical Authority</p>
+                                            
+                                            <div className="space-y-5">
+                                                <div className="flex items-center gap-4 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] truncate">
+                                                    <Mail className="w-4 h-4 text-indigo-500" /> {org.email}
                                                 </div>
-                                                <div className="flex items-center gap-3 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest">
-                                                    <Phone className="w-3.5 h-3.5 text-indigo-500" /> {org.orgPhone || 'N/A'}
+                                                <div className="flex items-center gap-4 text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">
+                                                    <Phone className="w-4 h-4 text-indigo-500" /> {org.orgPhone || 'N/A'}
                                                 </div>
-                                                <div className="flex items-start gap-3 text-[9px] text-[var(--text-muted)] font-black uppercase tracking-[0.1em] leading-relaxed">
-                                                    <MapPin className="w-4 h-4 text-indigo-500 shrink-0" /> {org.orgAddress || 'Remote Partner'}
+                                                <div className="flex items-start gap-4 text-[9px] text-[var(--text-muted)] font-black uppercase tracking-[0.1em] leading-relaxed italic">
+                                                    <MapPin className="w-4 h-4 text-indigo-500 shrink-0" /> {org.orgAddress}
                                                 </div>
                                             </div>
-                                            <div className="mt-8 pt-6 border-t border-[var(--border)] flex justify-between items-center">
-                                                <span className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Status</span>
-                                                <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 rounded-lg text-[9px] font-black uppercase tracking-widest">Verified Partner</span>
+                                            <div className="mt-10 pt-8 border-t border-[var(--border)] flex justify-between items-center">
+                                                <span className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest">Protocol</span>
+                                                <span className="px-4 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]">Authenticated Node</span>
                                             </div>
                                         </motion.div>
                                     ))}
@@ -741,83 +798,97 @@ const AdminDashboard = () => {
 
                     {/* USER SUPPORT */}
                     {activeSection === 'support' && (
-                        <motion.div key="support" variants={tabVars} initial="hidden" animate="visible" exit="exit">
-                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">User Support Portal</h1>
-                            <p className="text-[var(--text-muted)] mb-12 font-medium">Respond to user inquiries and resolve technical problems.</p>
+                        <motion.div key="support" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-6xl mx-auto py-4">
+                            <h1 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">Comms Center<span className="text-[#dc143c]">.</span></h1>
+                            <p className="text-[var(--text-muted)] mb-12 font-bold uppercase tracking-[0.3em] text-[10px]">Resolve emergency inquiries & technical anomalies</p>
                             
-                            <div className="grid gap-8">
+                            <div className="grid gap-10">
                                 {isLoading && supportMessages.length === 0 ? (
-                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-widest text-xs animate-pulse">Syncing Support Signal...</div>
+                                    <div className="py-20 text-center text-[var(--text-muted)] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">Filtering Sub-Space Signals...</div>
                                 ) : supportMessages.length === 0 ? (
-                                    <div className="bg-[var(--bg-secondary)]/50 p-20 rounded-[3rem] border border-[var(--border)] text-center shadow-inner">
-                                        <div className="w-20 h-20 bg-[var(--bg-primary)] rounded-full flex items-center justify-center mx-auto mb-6 border border-[var(--border)] shadow-lg">
+                                    <div className="bg-[var(--bg-secondary)]/50 p-24 rounded-[4rem] border border-[var(--border)] text-center shadow-2xl relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-[#dc143c]/5 to-transparent"></div>
+                                        <div className="w-24 h-24 bg-[var(--bg-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-8 border border-[var(--border)] shadow-2xl">
                                             <MessageSquare className="w-10 h-10 text-[var(--text-muted)]" />
                                         </div>
-                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">No support tickets found</p>
+                                        <p className="text-[var(--text-muted)] font-black uppercase tracking-[0.4em] text-xs">Channels Nominal - No Incoming Data</p>
                                     </div>
                                 ) : (
                                     supportMessages.map(msg => (
-                                        <div key={msg.id} className="bg-[var(--bg-secondary)] backdrop-blur-[40px] p-8 md:p-10 rounded-[3rem] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-all group relative overflow-hidden shadow-sm hover:shadow-[var(--shadow)]">
-                                            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)]/5 rounded-bl-[100%] z-0 translate-x-32 -translate-y-32 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-1000"></div>
-                                            <div className="flex flex-col lg:flex-row gap-8 justify-between relative z-10">
-                                                <div className="space-y-6 flex-1">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border)] overflow-hidden flex items-center justify-center shadow-xl">
-                                                            {msg.user?.avatar ? <img src={msg.user.avatar} className="w-full h-full object-cover" /> : <User className="w-6 h-6 text-[var(--text-muted)]" />}
+                                        <motion.div 
+                                            key={msg.id} 
+                                            whileHover={{ scale: 1.01 }}
+                                            className="bg-[var(--bg-card)]/60 backdrop-blur-3xl p-10 md:p-14 rounded-[4rem] border border-[var(--border)] hover:border-[#dc143c]/30 transition-all group relative overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.5)]"
+                                        >
+                                            <div className="absolute top-0 right-0 w-96 h-96 bg-[#dc143c]/5 rounded-bl-full z-0 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                                            <div className="flex flex-col lg:flex-row gap-12 justify-between relative z-10">
+                                                <div className="space-y-8 flex-1">
+                                                    <div className="flex items-center gap-6">
+                                                        <div className="w-16 h-16 rounded-[2rem] bg-[var(--bg-primary)] border border-[var(--border)] overflow-hidden flex items-center justify-center shadow-2xl group-hover:border-[#dc143c] transition-all">
+                                                            {msg.user?.avatar ? <img src={msg.user.avatar} className="w-full h-full object-cover" /> : <User className="w-7 h-7 text-[var(--text-muted)]" />}
                                                         </div>
                                                         <div>
-                                                            <h3 className="text-xl font-black text-[var(--text-primary)] brand-font tracking-tight">{msg.user?.name}</h3>
+                                                            <h3 className="text-3xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-1">{msg.user?.name}</h3>
                                                             <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">{msg.user?.email}</p>
                                                         </div>
-                                                        <span className={`ml-auto lg:ml-0 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${msg.status === 'OPEN' ? 'bg-orange-500/10 text-orange-500' : msg.status === 'REPLIED' ? 'bg-green-500/10 text-green-500' : 'bg-blue-500/10 text-blue-500'}`}>
+                                                        <span className={`ml-auto lg:ml-6 px-6 py-2 rounded-2xl text-[9px] font-black uppercase tracking-widest border ${msg.status === 'OPEN' ? 'bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_15px_rgba(249,115,22,0.1)]' : msg.status === 'REPLIED' ? 'bg-green-500/10 text-green-500 border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'bg-blue-500/10 text-blue-500 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]'}`}>
                                                             {msg.status}
                                                         </span>
                                                     </div>
-
-                                                    <div className="bg-[var(--bg-primary)]/50 p-6 rounded-3xl border border-[var(--border)] group-hover:border-[var(--accent)]/20 transition-colors">
-                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-2">Subject: {msg.subject}</p>
-                                                        <p className="text-sm font-medium text-[var(--text-primary)] leading-relaxed italic">"{msg.message}"</p>
+ 
+                                                    <div className="bg-[var(--bg-primary)] p-8 rounded-[2.5rem] border border-[var(--border)] group-hover:border-[var(--text-muted)]/10 transition-colors relative overflow-hidden">
+                                                        <div className="absolute top-0 left-0 w-1 h-full bg-[#dc143c]/30"></div>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dc143c] mb-4">Transmission Payload</p>
+                                                        <p className="text-[11px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-3 italic">Subject: {msg.subject}</p>
+                                                        <p className="text-base font-bold text-[var(--text-secondary)] leading-relaxed italic">"{msg.message}"</p>
                                                     </div>
-
+ 
                                                     {msg.adminReply && (
-                                                        <div className="bg-slate-950 p-6 rounded-3xl border border-white/5 ml-8 relative shadow-2xl">
-                                                            <div className="absolute -left-4 top-6 w-4 h-0.5 bg-red-500"></div>
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-red-500 mb-2">Official Reply</p>
-                                                            <p className="text-sm font-bold text-white leading-relaxed">"{msg.adminReply}"</p>
-                                                        </div>
+                                                        <motion.div 
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            className="bg-[var(--bg-primary)] p-8 rounded-[2.5rem] border border-emerald-500/20 ml-12 relative shadow-2xl"
+                                                        >
+                                                            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500/30"></div>
+                                                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-2">Admin Strategy</p>
+                                                            <p className="text-sm font-bold text-[var(--text-primary)] leading-relaxed italic">"{msg.adminReply}"</p>
+                                                        </motion.div>
                                                     )}
                                                 </div>
-
-                                                <div className="lg:w-80 space-y-4 shrink-0">
-                                                    <div className="space-y-2">
-                                                        <label className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] ml-2">Quick Response</label>
+ 
+                                                <div className="lg:w-96 space-y-6 shrink-0 lg:border-l lg:border-[var(--border)] lg:pl-12">
+                                                    <div className="space-y-4">
+                                                        <div className="flex justify-between items-center px-4">
+                                                            <label className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)]">Response Buffer</label>
+                                                            <Activity className="w-3.5 h-3.5 text-[#dc143c] animate-pulse" />
+                                                        </div>
                                                         <textarea 
-                                                            rows={4}
-                                                            placeholder="Type your official response..."
-                                                            className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-2xl p-4 text-sm font-bold text-[var(--text-primary)] resize-none focus:ring-4 focus:ring-[var(--accent)]/10 focus:border-[var(--accent)]/50 outline-none transition-all shadow-inner"
+                                                            rows={6}
+                                                            placeholder="Synthesize reply..."
+                                                            className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-[2rem] p-6 text-sm font-bold text-[var(--text-primary)] resize-none focus:ring-4 focus:ring-[#dc143c]/5 focus:border-[#dc143c]/40 outline-none transition-all shadow-inner placeholder:text-[var(--text-muted)]"
                                                             value={replyTexts[msg.id] || ''}
                                                             onChange={(e) => setReplyTexts(prev => ({ ...prev, [msg.id]: e.target.value }))}
                                                         />
                                                     </div>
-                                                    <div className="flex gap-3">
+                                                    <div className="flex gap-4">
                                                         <button 
                                                             onClick={() => handleSupportReply(msg.id)}
-                                                            className="flex-1 bg-slate-950 text-white py-4 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:-translate-y-1 transition-all shadow-2xl shadow-black/40 border border-white/5"
+                                                            className="flex-1 bg-[var(--text-primary)] text-[var(--bg-primary)] py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 hover:-translate-y-1 transition-all shadow-2xl active:scale-95"
                                                         >
-                                                            <Send className="w-3.5 h-3.5" /> {msg.adminReply ? 'Update' : 'Send Reply'}
+                                                            <Send className="w-4 h-4" /> {msg.adminReply ? 'Revise' : 'Transmit'}
                                                         </button>
                                                         {msg.status !== 'RESOLVED' && (
                                                             <button 
                                                                 onClick={() => handleSupportResolve(msg.id)}
-                                                                className="px-6 py-4 rounded-xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[9px] uppercase tracking-widest hover:bg-blue-500/10 hover:text-blue-500 hover:border-blue-500/30 transition-all font-bold"
+                                                                className="px-8 py-5 rounded-2xl border border-[var(--border)] text-[var(--text-muted)] font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500/30 transition-all"
                                                             >
-                                                                Resolve
+                                                                Close
                                                             </button>
                                                         )}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))
                                 )}
                             </div>

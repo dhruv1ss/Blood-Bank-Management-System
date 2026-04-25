@@ -49,7 +49,7 @@ const LifePath = () => {
     const [activeStep, setActiveStep] = useState(0);
 
     return (
-        <section className="py-32 bg-gray-50 relative overflow-hidden">
+        <section className="py-32 bg-[var(--bg-primary)] relative overflow-hidden">
             {/* Ambient Background Glows */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full translate-x-1/2 translate-y-1/2"></div>
@@ -59,16 +59,16 @@ const LifePath = () => {
                     <Motion.div 
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-100 shadow-sm text-gray-500 text-[10px] font-black uppercase tracking-widest"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border)] shadow-sm text-[var(--text-muted)] text-[10px] font-black uppercase tracking-widest"
                     >
                         <ShieldCheck className="w-4 h-4 text-emerald-500" />
                         Education First
                     </Motion.div>
-                    <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-gray-900 leading-tight">
+                    <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-[var(--text-primary)] leading-tight">
                         The <span className="text-red-600">Life Path.</span> <br/>
                         A Journey of Hope.
                     </h2>
-                    <p className="text-xl text-gray-500 font-medium leading-relaxed">
+                    <p className="text-xl text-[var(--text-muted)] font-medium leading-relaxed">
                         Ever wondered what happens after your donation? Follow the cinematic journey of your blood as it transforms from a simple act of giving into a life-saving miracle.
                     </p>
                 </div>
@@ -84,28 +84,28 @@ const LifePath = () => {
                                 whileHover={{ x: 10 }}
                                 className={`w-full p-6 rounded-3xl text-left transition-all relative overflow-hidden group ${
                                     activeStep === idx 
-                                    ? 'bg-white shadow-2xl shadow-gray-200 /10 border border-gray-100 z-10' 
-                                    : 'bg-transparent hover:bg-gray-100/50'
+                                    ? 'bg-[var(--bg-card)] shadow-[var(--shadow)] border border-[var(--border)] z-10' 
+                                    : 'bg-transparent hover:bg-[var(--bg-secondary)]'
                                 }`}
                             >
                                 {activeStep === idx && (
                                     <Motion.div 
                                         layoutId="active-bg" 
-                                        className="absolute inset-0 bg-white"
+                                        className="absolute inset-0 bg-[var(--bg-card)]"
                                     />
                                 )}
                                 <div className="relative z-10 flex items-center gap-6">
                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${
-                                        activeStep === idx ? step.color + ' text-white' : 'bg-gray-200 text-gray-400 group-hover:bg-gray-300'
+                                        activeStep === idx ? step.color + ' text-white' : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] group-hover:bg-[var(--border)]'
                                     }`}>
                                         <step.icon className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h4 className={`font-black uppercase tracking-widest text-[10px] mb-1 ${
-                                            activeStep === idx ? 'text-gray-400' : 'text-gray-400'
+                                            activeStep === idx ? 'text-[var(--text-muted)]' : 'text-[var(--text-muted)]'
                                         }`}>Step 0{step.id}</h4>
                                         <p className={`font-bold brand-font text-xl ${
-                                            activeStep === idx ? 'text-gray-900' : 'text-gray-400'
+                                            activeStep === idx ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'
                                         }`}>{step.title}</p>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@ const LifePath = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
                                 transition={{ duration: 0.5, ease: "easeOut" }}
-                                className="bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl shadow-gray-200/50 border border-white relative overflow-hidden h-full"
+                                className="bg-[var(--bg-card)] p-12 md:p-16 rounded-[4rem] shadow-[var(--shadow)] border border-[var(--border)] relative overflow-hidden h-full"
                             >
                                 {/* Liquid Graphic Overlay */}
                                 <div className={`absolute -top-32 -right-32 w-64 h-64 rounded-full blur-[80px] opacity-20 ${steps[activeStep].color}`}></div>
@@ -133,21 +133,21 @@ const LifePath = () => {
                                     </div>
 
                                     <div className="space-y-6">
-                                        <h3 className="text-4xl md:text-6xl font-black brand-font tracking-tight text-gray-900">
+                                        <h3 className="text-4xl md:text-6xl font-black brand-font tracking-tight text-[var(--text-primary)]">
                                             {steps[activeStep].title}
                                         </h3>
-                                        <p className="text-2xl text-gray-500 font-medium leading-relaxed">
+                                        <p className="text-2xl text-[var(--text-secondary)] font-medium leading-relaxed">
                                             {steps[activeStep].desc}
                                         </p>
                                     </div>
 
-                                    <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 flex items-start gap-6 group hover:border-red-500/10 transition-colors">
+                                    <div className="p-8 rounded-3xl bg-[var(--bg-secondary)] border border-[var(--border)] flex items-start gap-6 group hover:border-red-500/10 transition-colors">
                                         <div className="mt-1">
                                             <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
                                                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                             </div>
                                         </div>
-                                        <p className="text-gray-600 font-bold leading-relaxed italic">
+                                        <p className="text-[var(--text-secondary)] font-bold leading-relaxed italic">
                                             "{steps[activeStep].detail}"
                                         </p>
                                     </div>

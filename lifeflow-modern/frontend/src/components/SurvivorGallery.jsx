@@ -136,27 +136,27 @@ const DetailsModal = ({ story, onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#050510]/95 backdrop-blur-2xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[var(--bg-primary)]/95 backdrop-blur-2xl"
             onClick={onClose}
         >
             <Motion.div 
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                className="relative w-full max-w-4xl bg-[#0a0a1a] border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(220,38,38,0.2)]"
+                className="relative w-full max-w-4xl bg-[var(--bg-card)] border border-[var(--border)] rounded-[3rem] overflow-hidden shadow-[var(--shadow)]"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex flex-col md:flex-row h-full">
                     {/* Left: Image */}
                     <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
                         <img src={story.image} className="absolute inset-0 w-full h-full object-cover" alt="" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0a1a] hidden md:block"></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a1a] to-transparent block md:hidden"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[var(--bg-card)] hidden md:block"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] to-transparent block md:hidden"></div>
                     </div>
                     
                     {/* Right: Content */}
                     <div className="w-full md:w-1/2 p-12 md:p-16 flex flex-col justify-center">
-                        <button onClick={onClose} className="absolute top-8 right-8 text-white/20 hover:text-white bg-white/5 p-3 rounded-2xl border border-white/10 transition-all">
+                        <button onClick={onClose} className="absolute top-8 right-8 text-[var(--text-muted)] hover:text-[var(--text-primary)] bg-[var(--bg-secondary)] p-3 rounded-2xl border border-[var(--border)] transition-all">
                             <X className="w-6 h-6" />
                         </button>
                         
@@ -166,30 +166,30 @@ const DetailsModal = ({ story, onClose }) => {
                                     <Activity className="w-5 h-5" />
                                     <span className="text-[10px] font-black uppercase tracking-[0.4em]">{story.tagline}</span>
                                 </div>
-                                <h2 className="text-5xl font-black text-white brand-font tracking-tight mb-2 leading-none">{story.name}</h2>
-                                <p className="text-white/40 font-bold text-xs uppercase tracking-widest">
+                                <h2 className="text-5xl font-black text-[var(--text-primary)] brand-font tracking-tight mb-2 leading-none">{story.name}</h2>
+                                <p className="text-[var(--text-muted)] font-bold text-xs uppercase tracking-widest">
                                     {story.dynamicStats ? `${story.dynamicStats.livesImpacted} Lives Impacted` : story.stats}
                                 </p>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-6 py-8 border-y border-white/5">
+                            <div className="grid grid-cols-2 gap-6 py-8 border-y border-[var(--border)]">
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
+                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                                         <MapPin className="w-3 h-3" /> Location
                                     </p>
-                                    <p className="text-white font-bold text-sm tracking-tight">{story.hospital}</p>
+                                    <p className="text-[var(--text-primary)] font-bold text-sm tracking-tight">{story.hospital}</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
+                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                                         <Calendar className="w-3 h-3" /> Date
                                     </p>
-                                    <p className="text-white font-bold text-sm tracking-tight">{story.date}</p>
+                                    <p className="text-[var(--text-primary)] font-bold text-sm tracking-tight">{story.date}</p>
                                 </div>
                             </div>
                             
                             <div className="space-y-4">
-                                <p className="text-white/70 text-lg leading-relaxed font-medium italic">"{story.gratitude}"</p>
-                                <p className="text-white/40 text-sm leading-relaxed">{story.story}</p>
+                                <p className="text-[var(--text-secondary)] text-lg leading-relaxed font-medium italic">"{story.gratitude}"</p>
+                                <p className="text-[var(--text-muted)] text-sm leading-relaxed">{story.story}</p>
                             </div>
                             
                             <button className="w-full py-5 bg-red-600 text-white rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-red-500 transition-all shadow-2xl shadow-red-600/40">
@@ -233,7 +233,7 @@ const SurvivorGallery = () => {
     }));
 
     return (
-        <section className="py-32 bg-white relative overflow-hidden">
+        <section className="py-32 bg-[var(--bg-primary)] relative overflow-hidden">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col lg:flex-row items-end justify-between mb-24 gap-8">
                     <div className="max-w-2xl space-y-6">
@@ -241,17 +241,17 @@ const SurvivorGallery = () => {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-gray-50 border border-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest"
+                            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-[var(--bg-secondary)] border border-[var(--border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-widest"
                         >
                             <Heart className="w-4 h-4 text-red-500" />
                             Stories of Impact
                         </Motion.div>
-                        <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-gray-900 leading-[0.9]">
+                        <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-[var(--text-primary)] leading-[0.9]">
                             Proof that a <br/>
                             <span className="text-red-600">single drop</span> matters.
                         </h2>
                     </div>
-                    <p className="text-xl text-gray-400 font-medium max-w-sm leading-relaxed mb-4">
+                    <p className="text-xl text-[var(--text-muted)] font-medium max-w-sm leading-relaxed mb-4">
                         Behind every donation is a heartbeat saved. Explore the lives transformed by the silent heroes of LifeFlow.
                     </p>
                 </div>
@@ -281,7 +281,7 @@ const SurvivorGallery = () => {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mt-24 p-12 rounded-[3.5rem] bg-gray-900 border border-gray-800 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
+                    className="mt-24 p-12 rounded-[3.5rem] bg-[var(--bg-secondary)] border border-[var(--border)] flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
                 >
                     <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] -translate-y-1/2 translate-x-1/3"></div>
                     <div className="relative z-10 flex items-center gap-6">
@@ -289,11 +289,11 @@ const SurvivorGallery = () => {
                             <Heart className="w-10 h-10 fill-current" />
                         </div>
                         <div>
-                            <h4 className="text-3xl font-black text-white brand-font tracking-tight">Ready to write your own legacy?</h4>
-                            <p className="text-gray-400 font-medium">It takes less than 15 minutes to save up to three lives.</p>
+                            <h4 className="text-3xl font-black text-[var(--text-primary)] brand-font tracking-tight">Ready to write your own legacy?</h4>
+                            <p className="text-[var(--text-muted)] font-medium">It takes less than 15 minutes to save up to three lives.</p>
                         </div>
                     </div>
-                    <button className="relative z-10 px-10 py-5 bg-white rounded-full font-black text-gray-900 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/10 uppercase tracking-widest text-xs">
+                    <button className="relative z-10 px-10 py-5 bg-[var(--text-primary)] rounded-full font-black text-[var(--bg-primary)] hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/10 uppercase tracking-widest text-xs">
                         Start Your Journey
                     </button>
                 </Motion.div>

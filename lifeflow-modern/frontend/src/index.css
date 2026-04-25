@@ -6,28 +6,31 @@
   :root {
     --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
-    --bg-card: rgba(255, 255, 255, 0.7);
+    --bg-card: rgba(255, 255, 255, 0.85);
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    --accent: #ef4444;
-    --accent-hover: #dc2626;
+    --accent: #dc143c;
+    --accent-hover: #ff3355;
     --border: #e2e8f0;
     --glass-blur: 16px;
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --bg-hero: linear-gradient(135deg, #fff5f6 0%, #fff 100%);
   }
 
   .dark {
-    --bg-primary: #020617;
-    --bg-secondary: #0f172a;
-    --bg-card: rgba(15, 23, 42, 0.8);
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --accent: #f87171;
-    --accent-hover: #ef4444;
-    --border: #1e293b;
-    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --bg-primary: #050005;
+    --bg-secondary: #0a000a;
+    --bg-card: rgba(15, 0, 15, 0.82);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --accent: #dc143c;
+    --accent-hover: #ff3355;
+    --border: rgba(255, 255, 255, 0.08);
+    --glass-blur: 24px;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --bg-hero: linear-gradient(145deg, #1a0010 0%, #0f0005 50%, #12000a 100%);
   }
 }
 
@@ -43,89 +46,27 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4 {
   font-family: system-ui, -apple-system, sans-serif;
   font-weight: 700;
+  color: var(--text-primary);
 }
 
-/* ===== DARK MODE ===== */
+/* ===== DARK MODE OVERRIDES (Legacy/Specific) ===== */
 html.dark body {
-  background-color: #030712 !important;
-  color: #f3f4f6;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
 }
 
-html.dark nav {
-  background-color: rgba(17, 24, 39, 0.95) !important;
-  border-color: rgba(55, 65, 81, 0.5) !important;
-}
-
-html.dark .bg-white,
-html.dark .bg-white\/80,
-html.dark .bg-white\/90,
-html.dark .bg-white\/95,
-html.dark .bg-gray-50 {
-  background-color: #111827 !important;
-}
-
-html.dark .bg-gray-50\/80,
-html.dark .bg-gray-100 {
-  background-color: #1f2937 !important;
-}
-
-html.dark .text-gray-900 {
-  color: #f9fafb !important;
-}
-
-html.dark .text-gray-800 {
-  color: #f3f4f6 !important;
-}
-
-html.dark .text-gray-700 {
-  color: #e5e7eb !important;
-}
-
-html.dark .text-gray-600 {
-  color: #d1d5db !important;
-}
-
-html.dark .text-gray-500 {
-  color: #9ca3af !important;
-}
-
-html.dark .text-gray-400 {
-  color: #6b7280 !important;
-}
-
-html.dark .border-gray-100,
-html.dark .border-gray-200 {
-  border-color: #374151 !important;
-}
-
-html.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
-}
-
-html.dark input,
-html.dark select,
-html.dark textarea {
-  background-color: #1f2937 !important;
-  color: #f3f4f6 !important;
-  border-color: #374151 !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-  color: #6b7280 !important;
-}
-
-html.dark .bg-gray-50\/50 {
-  background-color: #1f2937 !important;
-}
+/* Remove legacy nav overrides to allow theme-aware components to handle it */
 /* Ticker Animation */
 @keyframes scroll {
   0% { transform: translateX(0); }

@@ -7,6 +7,7 @@ import api from '../lib/api';
 import LifePulseMap from '../components/LifePulseMap';
 import SurvivorGallery from '../components/SurvivorGallery';
 import LifePath from '../components/LifePath';
+import AboutCreator from '../components/AboutCreator';
 
 const Counter = ({ end, duration = 2.5, suffix = "" }) => {
   const [count, setCount] = useState(0);
@@ -118,21 +119,21 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-full bg-white text-gray-900 overflow-hidden font-sans">
+    <div className="w-full overflow-hidden font-sans" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
 
       
-      {/* Cinematic Hero Section (Dark Image Backdrop) */}
-      <section ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-black">
+      {/* Cinematic Hero Section (Theme-Adaptive Backdrop) */}
+      <section ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[var(--bg-primary)]">
          {/* Smooth Continuous Cinematic Background */}
          <div className="absolute inset-0 z-0 h-full w-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)]/40 via-[var(--bg-primary)]/20 to-transparent z-10"></div>
             <Motion.img 
               initial={{ scale: 1.02 }}
               animate={{ scale: 1.08, rotate: 0.5 }}
               transition={{ duration: 60, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
               src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&q=80&w=2560" 
               alt="Medical background"
-              className="w-full h-full object-cover origin-center"
+              className="w-full h-full object-cover origin-center opacity-60 dark:opacity-100"
             />
             {/* Liquid Physics Layer */}
             <LiquidHero />
@@ -142,28 +143,28 @@ const Home = () => {
          <Motion.div 
            animate={{ y: [0, -20, 0], rotate: [0, 2, 0] }}
            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-           className="absolute top-[20%] right-[15%] z-20 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl"
+           className="absolute top-[20%] right-[15%] z-20 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] shadow-2xl"
          >
            <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-500">
              <Heart className="w-5 h-5 fill-current" />
            </div>
            <div>
-             <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">Trusted Network</p>
-             <p className="text-sm text-white font-bold">50+ Verified Hospitals</p>
+             <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest font-bold">Trusted Network</p>
+             <p className="text-sm text-[var(--text-primary)] font-bold">50+ Verified Hospitals</p>
            </div>
          </Motion.div>
 
          <Motion.div 
            animate={{ y: [0, 20, 0], rotate: [0, -2, 0] }}
            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-           className="absolute bottom-[30%] left-[10%] z-20 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl"
+           className="absolute bottom-[30%] left-[10%] z-20 hidden lg:flex items-center gap-3 px-5 py-3 rounded-2xl bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border)] shadow-2xl"
          >
              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
              <Activity className="w-5 h-5" />
            </div>
            <div>
-             <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">Live Status</p>
-             <p className="text-sm text-white font-bold">Emergency Active</p>
+             <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest font-bold">Live Status</p>
+             <p className="text-sm text-[var(--text-primary)] font-bold">Emergency Active</p>
            </div>
          </Motion.div>
 
@@ -179,14 +180,14 @@ const Home = () => {
                   Save Lives Today
                 </div>
                 
-                <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-black mb-8 tracking-tighter leading-[1.02] brand-font text-white drop-shadow-sm">
+                <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-black mb-8 tracking-tighter leading-[1.02] brand-font text-[#121212] dark:text-white drop-shadow-sm">
                    Donate Blood. <br className="hidden md:block"/>
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-300 to-white">
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-red-400 dark:from-red-500 dark:via-red-400 dark:to-[#ff8080]">
                      Inspire Humanity.
                    </span>
                 </h1>
                 
-                <p className="text-xl md:text-2xl text-white/80 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
+                <p className="text-xl md:text-2xl text-[var(--text-secondary)] font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
                    Join an elite network of heroes. Every drop you give fuels the future, saving up to three lives with a single heroic act.
                 </p>
                 
@@ -200,26 +201,26 @@ const Home = () => {
                    </Link>
                    
                    <Link to="/camps" 
-                         className="group px-10 py-5 bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 rounded-full font-bold text-white transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 text-lg">
-                     <Navigation className="w-5 h-5 text-red-400 group-hover:-translate-y-0.5 transition-transform"/> Find Active Camps
+                         className="group px-10 py-5 bg-[var(--bg-card)] border border-[var(--border)] backdrop-blur-md hover:bg-[var(--bg-secondary)] rounded-full font-bold text-[var(--text-primary)] transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 text-lg">
+                     <Navigation className="w-5 h-5 text-red-500 group-hover:-translate-y-0.5 transition-transform"/> Find Active Camps
                    </Link>
                 </div>
              </Motion.div>
          </div>
 
-         {/* Bottom Fade into Light Mode */}
-         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-50 via-gray-50/80 to-transparent z-10"></div>
+         {/* Bottom Fade into Theme Background */}
+         <div className="absolute bottom-0 left-0 right-0 h-40 z-10" style={{ background: 'linear-gradient(to top, var(--bg-primary), transparent)' }}></div>
       </section>
 
-      {/* Stats Section with Light Glassmorphism */}
-      <section className="relative z-20 py-20 bg-gray-50 px-6">
+      {/* Stats Section — Theme Adaptive Glassmorphism */}
+      <section className="relative z-20 py-20 px-6" style={{ background: 'var(--bg-primary)' }}>
          <div className="container mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {[
-                  { icon: Heart, label: "Lives Saved", value: stats.livesSaved, suffix: "+", color: "text-red-500", bg: "bg-red-50", fill: "rgba(239, 68, 68, 0.08)" },
-                  { icon: Users, label: "Active Donors", value: stats.activeDonors, suffix: "+", color: "text-blue-500", bg: "bg-blue-50", fill: "rgba(59, 130, 246, 0.08)" },
-                  { icon: Activity, label: "Successful Units", value: stats.successfulUnits, suffix: "", color: "text-emerald-500", bg: "bg-emerald-50", fill: "rgba(16, 185, 129, 0.08)" },
-                  { icon: ShieldCheck, label: "Verified Centers", value: stats.verifiedCenters, suffix: "", color: "text-purple-500", bg: "bg-purple-50", fill: "rgba(168, 85, 247, 0.08)" },
+                  { icon: Heart, label: "Lives Saved", value: stats.livesSaved, suffix: "+", color: "#ff3355", glowColor: "rgba(220,20,60,0.2)" },
+                  { icon: Users, label: "Active Donors", value: stats.activeDonors, suffix: "+", color: "#60a5fa", glowColor: "rgba(59,130,246,0.2)" },
+                  { icon: Activity, label: "Successful Units", value: stats.successfulUnits, suffix: "", color: "#34d399", glowColor: "rgba(16,185,129,0.2)" },
+                  { icon: ShieldCheck, label: "Verified Centers", value: stats.verifiedCenters, suffix: "", color: "#a78bfa", glowColor: "rgba(124,58,237,0.2)" },
                 ].map((stat, idx) => (
                   <Motion.div 
                     key={idx}
@@ -228,42 +229,21 @@ const Home = () => {
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ delay: idx * 0.1, duration: 0.6 }}
                     whileHover={{ y: -8, scale: 1.02 }}
-                    className="group relative p-8 rounded-[2rem] bg-white border border-gray-100 overflow-hidden shadow-xl shadow-gray-200/40 transition-all cursor-pointer"
+                    style={{
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '1.5rem', padding: '2rem',
+                      position: 'relative', overflow: 'hidden', cursor: 'pointer',
+                    }}
                   >
-                    {/* Liquid Impact Background */}
-                    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                        <Motion.svg 
-                            viewBox="0 0 100 100" 
-                            className="absolute bottom-0 left-0 w-full h-[150%] opacity-100"
-                            initial={{ y: "100%" }}
-                            whileInView={{ y: "45%" }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 2, ease: "easeOut", delay: 0.5 + idx * 0.1 }}
-                        >
-                            <Motion.path 
-                                animate={{ 
-                                    d: [
-                                        "M 0 50 Q 25 40 50 50 T 100 50 V 100 H 0 Z",
-                                        "M 0 50 Q 25 60 50 50 T 100 50 V 100 H 0 Z",
-                                        "M 0 50 Q 25 40 50 50 T 100 50 V 100 H 0 Z"
-                                    ]
-                                }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                fill={stat.fill}
-                            />
-                        </Motion.svg>
+                    <div style={{ position: 'absolute', top: -20, right: -20, width: 100, height: 100, borderRadius: '50%', background: stat.glowColor, filter: 'blur(30px)', opacity: 0.8 }} />
+                    <div style={{ width: 48, height: 48, borderRadius: '13px', background: stat.glowColor, border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', color: stat.color }}>
+                       <stat.icon style={{ width: 22, height: 22 }} />
                     </div>
-
-                    {/* Hover Glow */}
-                    <div className={`absolute -top-10 -right-10 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${stat.bg.replace('50', '200')}`}></div>
-                    
-                    <div className={`w-14 h-14 rounded-2xl ${stat.bg} flex items-center justify-center mb-6 ${stat.color} border border-white shadow-inner relative z-10`}>
-                       <stat.icon className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-4xl lg:text-5xl font-black text-gray-900 brand-font mb-2 relative z-10">
+                    <h3 className="text-4xl lg:text-5xl font-black brand-font mb-2" style={{ color: 'var(--text-primary)' }}>
                        <Counter end={stat.value} suffix={stat.suffix} />
                     </h3>
-                    <p className="text-gray-500 font-bold uppercase tracking-widest text-xs relative z-10">{stat.label}</p>
+                    <p className="font-bold uppercase tracking-widest text-xs" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
                   </Motion.div>
                 ))}
             </div>
@@ -277,15 +257,14 @@ const Home = () => {
       <LifePath />
 
       {/* Editorial 'How it Works' Cards */}
-Line 284:
-      <section className="py-24 bg-white relative">
+      <section className="py-24 relative" style={{ background: 'var(--bg-primary)' }}>
          <div className="container mx-auto px-6">
             <Motion.div 
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once:true }}
               className="text-center max-w-3xl mx-auto mb-20"
             >
-               <h2 className="text-sm font-black text-red-600 tracking-[0.2em] uppercase mb-4 bg-red-50 inline-block px-4 py-2 rounded-full">The Process</h2>
-               <h3 className="text-4xl md:text-6xl font-black brand-font tracking-tight text-gray-900 mt-4">Why <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">Donate Blood?</span></h3>
+               <h2 className="text-sm font-black tracking-[0.2em] uppercase mb-4 inline-block px-4 py-2 rounded-full" style={{ color: '#ff3355', background: 'rgba(220,20,60,0.1)', border: '1px solid rgba(220,20,60,0.2)' }}>The Process</h2>
+               <h3 className="text-4xl md:text-6xl font-black brand-font tracking-tight mt-4" style={{ color: 'var(--text-primary)' }}>Why <span style={{ background: 'linear-gradient(90deg,#ff3355,#ff8080)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Donate Blood?</span></h3>
             </Motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -300,16 +279,16 @@ Line 284:
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.15, duration: 0.5 }}
-                    className="group relative rounded-[2rem] overflow-hidden bg-white border border-gray-100 shadow-2xl shadow-gray-200/40 hover:shadow-red-200/40 aspect-[4/5]"
+                    className="group relative rounded-[2rem] overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border)] shadow-2xl shadow-gray-200/20 dark:shadow-black/40 hover:shadow-red-200/20 aspect-[4/5]"
                   >
                      <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                     {/* Light Mode Overlay (Semi-transparent white gradient) */}
-                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
+                     {/* Theme-Adaptive Overlay */}
+                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/90 via-[var(--bg-primary)]/40 to-transparent"></div>
                      
                      <div className="absolute inset-0 p-8 flex flex-col justify-end text-left">
-                        <span className="text-white/80 font-black text-6xl brand-font mb-4 block transform group-hover:-translate-y-2 transition-transform duration-500 opacity-90">{card.num}</span>
-                        <h4 className="text-3xl font-black text-white mb-3 transform group-hover:-translate-y-2 transition-transform duration-500 leading-tight">{card.title}</h4>
-                        <p className="text-white/80 text-base font-medium leading-relaxed transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                        <span className="text-[var(--text-primary)] opacity-40 font-black text-6xl brand-font mb-4 block transform group-hover:-translate-y-2 transition-transform duration-500">{card.num}</span>
+                        <h4 className="text-3xl font-black text-[var(--text-primary)] mb-3 transform group-hover:-translate-y-2 transition-transform duration-500 leading-tight">{card.title}</h4>
+                        <p className="text-[var(--text-secondary)] text-base font-medium leading-relaxed transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
                           {card.desc}
                         </p>
                      </div>
@@ -318,7 +297,8 @@ Line 284:
             </div>
          </div>
       </section>      {/* THE LEGACY OF KARL LANDSTEINER */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      <section className="py-32 relative overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(220,20,60,0.06) 0%, transparent 60%)' }} />
          <div className="container mx-auto px-6">
             <div className="flex flex-col lg:flex-row items-center gap-20">
                {/* Image Side */}
@@ -330,17 +310,17 @@ Line 284:
                  className="flex-1 relative"
                >
                   <div className="relative group perspective-1000">
-                     <div className="absolute -inset-4 bg-red-600/5 rounded-[4rem] blur-2xl group-hover:bg-red-600/10 transition-colors duration-700"></div>
-                     <div className="relative rounded-[3.5rem] overflow-hidden border border-gray-100 shadow-2xl shadow-gray-200/50">
+                     <div className="absolute -inset-4 rounded-[4rem] blur-2xl" style={{ background: 'rgba(220,20,60,0.08)' }}></div>
+                     <div className="relative rounded-[3.5rem] overflow-hidden" style={{ border: '1px solid [var(--border)]' }}>
                         <img 
                           src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Karl_Landsteiner_nobel.jpg" 
                           alt="Karl Landsteiner" 
                           className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                         <div className="absolute bottom-10 left-10 text-white">
-                           <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-1 opacity-80">Nobel Laureate</p>
-                           <h4 className="text-2xl font-black brand-font tracking-tight">Karl Landsteiner <span className="text-red-500">.</span></h4>
+                           <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Nobel Laureate</p>
+                           <h4 className="text-2xl font-black brand-font tracking-tight">Karl Landsteiner <span style={{ color: '#ff3355' }}>.</span></h4>
                         </div>
                      </div>
                      
@@ -348,10 +328,11 @@ Line 284:
                      <Motion.div 
                        animate={{ y: [0, -15, 0] }}
                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                       className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-white border border-gray-100 shadow-xl flex flex-col items-center justify-center p-6 text-center z-10"
+                       className="absolute -top-10 -right-10 w-32 h-32 rounded-full flex flex-col items-center justify-center p-6 text-center z-10"
+                       style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', backdropFilter: 'blur(20px)' }}
                      >
-                        <span className="text-3xl font-black text-red-600 brand-font mb-0.5">1930</span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-gray-400">Nobel Prize Physiology</span>
+                        <span className="text-3xl font-black brand-font mb-0.5" style={{ color: '#ff3355' }}>1930</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>Nobel Prize</span>
                      </Motion.div>
                   </div>
                </Motion.div>
@@ -364,32 +345,32 @@ Line 284:
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                   >
-                     <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-gray-50 border border-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest mb-8">
-                        <Activity className="w-4 h-4 text-red-500" />
+                     <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full mb-8" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                        <Activity className="w-4 h-4" style={{ color: '#ff3355' }} />
                         The Father of Transfusion Medicine
                      </div>
-                     <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight leading-[1] text-gray-900 mb-8">
+                     <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight leading-[1] mb-8" style={{ color: 'var(--text-primary)' }}>
                         Discovering the <br/>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">ABO Blood Matrix.</span>
+                        <span style={{ background: 'linear-gradient(90deg, #ff3355, #ff8080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ABO Blood Matrix.</span>
                      </h2>
-                     <p className="text-xl text-gray-500 font-medium leading-relaxed mb-8">
-                        In 1900, Austrian-American biologist Karl Landsteiner made a discovery that would change the course of human history. By identifying that blood from different individuals clumped together when mixed, he mapped the 3 primary blood groups: A, B, and O.
+                     <p className="text-xl font-medium leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+                        In 1900, Austrian-American biologist Karl Landsteiner made a discovery that would change the course of human history by identifying blood groups A, B, and O.
                      </p>
                      
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div className="space-y-4">
-                           <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 font-black brand-font border border-white shadow-inner">
+                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black brand-font" style={{ background: 'rgba(220,20,60,0.1)', border: '1px solid rgba(220,20,60,0.2)', color: '#ff3355' }}>
                               01
                            </div>
-                           <h5 className="text-lg font-black text-gray-900 brand-font">Safe Transfusions</h5>
-                           <p className="text-sm text-gray-400 font-medium leading-relaxed">His research transformed blood donation from a dangerous ritual into a safe, routine clinical procedure.</p>
+                           <h5 className="text-lg font-black brand-font" style={{ color: 'var(--text-primary)' }}>Safe Transfusions</h5>
+                           <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-muted)' }}>His research transformed blood donation from a dangerous ritual into a safe, routine clinical procedure.</p>
                         </div>
                         <div className="space-y-4">
-                           <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 font-black brand-font border border-white shadow-inner">
+                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black brand-font" style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)', color: '#60a5fa' }}>
                               02
                            </div>
-                           <h5 className="text-lg font-black text-gray-900 brand-font">Polio Research</h5>
-                           <p className="text-sm text-gray-400 font-medium leading-relaxed">Beyond blood groups, he co-discovered the Polio virus, further cementing his status as a titan of science.</p>
+                           <h5 className="text-lg font-black brand-font" style={{ color: 'var(--text-primary)' }}>Polio Research</h5>
+                           <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-muted)' }}>Beyond blood groups, he co-discovered the Polio virus, cementing his status as a titan of science.</p>
                         </div>
                      </div>
                   </Motion.div>
@@ -399,15 +380,15 @@ Line 284:
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 }}
-                    className="p-10 rounded-[2.5rem] bg-gray-50 border border-gray-100 relative overflow-hidden"
+                    className="p-10 rounded-[2.5rem] relative overflow-hidden"
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
                   >
-                     <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 -skew-x-12 translate-x-16 -translate-y-8"></div>
-                     <p className="text-gray-600 font-medium italic relative z-10">
+                     <p className="font-medium italic relative z-10" style={{ color: 'var(--text-secondary)' }}>
                         "As long as there is any chance that a human life can be saved, it is the physician's duty to attempt a transfusion."
                      </p>
                      <div className="flex items-center gap-4 mt-6 relative z-10">
-                        <div className="w-10 h-1 h-px bg-red-400 rounded-full"></div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">The Landsteiner Legacy</span>
+                        <div className="w-10 h-px rounded-full" style={{ background: '#ff3355' }}></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: '#ff3355' }}>The Landsteiner Legacy</span>
                      </div>
                   </Motion.div>
                </div>
@@ -415,9 +396,9 @@ Line 284:
          </div>
       </section>
 
-
       {/* THE LEGACY OF CHARLES R. DREW */}
-      <section className="py-32 bg-gray-50/50 relative overflow-hidden">
+      <section className="py-32 relative overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
+         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(59,130,246,0.04) 0%, transparent 60%)' }} />
          <div className="container mx-auto px-6 text-left">
             <div className="flex flex-col-reverse lg:flex-row items-center gap-20">
                
@@ -429,32 +410,32 @@ Line 284:
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                   >
-                     <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white border border-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest mb-8 shadow-sm">
-                        <Droplets className="w-4 h-4 text-red-500" />
+                     <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full mb-8" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                        <Droplets className="w-4 h-4" style={{ color: '#ff3355' }} />
                         The Father of Blood Banks
                      </div>
-                     <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight leading-[1] text-gray-900 mb-8">
+                     <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight leading-[1] mb-8" style={{ color: 'var(--text-primary)' }}>
                         Innovating <br/>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">Blood Plasma Storage.</span>
+                        <span style={{ background: 'linear-gradient(90deg, #ff3355, #ff8080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Blood Plasma Storage.</span>
                      </h2>
-                     <p className="text-xl text-gray-500 font-medium leading-relaxed mb-8">
-                        Dr. Charles Richard Drew was a pioneering African-American surgeon who revolutionized medicine by developing a technique for long-term blood plasma storage. His innovation directly led to the first large-scale blood banks in the United States.
+                     <p className="text-xl font-medium leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+                        Dr. Charles Richard Drew was a pioneering surgeon who revolutionized medicine by developing a technique for long-term blood plasma storage — leading to the first large-scale blood banks.
                      </p>
                      
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <div className="space-y-4">
-                           <div className="w-12 h-12 rounded-2xl bg-red-600 flex items-center justify-center text-white font-black brand-font shadow-lg">
+                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black brand-font" style={{ background: 'rgba(220,20,60,0.15)', color: 'var(--text-primary)' }}>
                               01
                            </div>
-                           <h5 className="text-lg font-black text-gray-900 brand-font uppercase tracking-tight">Blood for Britain</h5>
-                           <p className="text-sm text-gray-400 font-medium leading-relaxed">During WWII, he organized the successful "Blood for Britain" program, shipping life-saving plasma to protect lives across the Atlantic.</p>
+                           <h5 className="text-lg font-black brand-font uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>Blood for Britain</h5>
+                           <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-muted)' }}>During WWII, he organized the "Blood for Britain" program, shipping life-saving plasma to protect lives across the Atlantic.</p>
                         </div>
                         <div className="space-y-4">
-                           <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-red-600 font-black brand-font border border-gray-100 shadow-sm">
+                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black brand-font" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: '#ff3355' }}>
                               02
                            </div>
-                           <h5 className="text-lg font-black text-gray-900 brand-font uppercase tracking-tight">Concept of Banking</h5>
-                           <p className="text-sm text-gray-400 font-medium leading-relaxed">He established the first blood bank for the American Red Cross and pioneered the standardized processing of blood donations.</p>
+                           <h5 className="text-lg font-black brand-font uppercase tracking-tight" style={{ color: 'var(--text-primary)' }}>Banking Concept</h5>
+                           <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-muted)' }}>He established the first blood bank for the American Red Cross and pioneered standardized blood donation processing.</p>
                         </div>
                      </div>
                   </Motion.div>
@@ -469,30 +450,30 @@ Line 284:
                  className="flex-1 relative"
                >
                   <div className="relative group perspective-1000">
-                     <div className="absolute -inset-4 bg-red-600/5 rounded-[4rem] blur-2xl group-hover:bg-red-600/10 transition-colors duration-700"></div>
-                     <div className="relative rounded-[3.5rem] overflow-hidden border border-white shadow-2xl shadow-gray-200/50">
+                     <div className="absolute -inset-4 rounded-[4rem] blur-2xl" style={{ background: 'rgba(220,20,60,0.06)' }}></div>
+                     <div className="relative rounded-[3.5rem] overflow-hidden" style={{ border: '1px solid var(--border)' }}>
                         <img 
                           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2tJ6R2Gk0sSKTcaBOCyIViZCVwlu4YU2MPid9SYuXR-hDOG5r_LlDrePF57k_NGYUBx_og3Fely_A-P7KlqQtVZgE4SngEc4cVYCrZg&s=10" 
                           alt="Charles R. Drew" 
                           className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                         <div className="absolute bottom-10 right-10 text-white text-right">
-                           <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-1 opacity-80">Surgeon & Pioneer</p>
-                           <h4 className="text-2xl font-black brand-font tracking-tight">Dr. Charles R. Drew <span className="text-red-500">.</span></h4>
+                           <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Surgeon &amp; Pioneer</p>
+                           <h4 className="text-2xl font-black brand-font tracking-tight">Dr. Charles R. Drew <span style={{ color: '#ff3355' }}>.</span></h4>
                         </div>
                      </div>
                      
-                     {/* History Pin */}
                      <Motion.div 
                        animate={{ y: [0, 15, 0] }}
                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                       className="absolute -bottom-10 -left-10 w-40 h-16 rounded-2xl bg-white border border-gray-100 shadow-xl flex items-center justify-center gap-3 px-6 z-10"
+                       className="absolute -bottom-10 -left-10 w-40 h-16 rounded-2xl flex items-center justify-center gap-3 px-6 z-10"
+                       style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', backdropFilter: 'blur(20px)' }}
                      >
-                        <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                           <Droplets className="w-4 h-4 text-red-600" />
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(220,20,60,0.15)' }}>
+                           <Droplets className="w-4 h-4" style={{ color: '#ff3355' }} />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">Plasma Pioneer</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--text-primary)' }}>Plasma Pioneer</span>
                      </Motion.div>
                   </div>
                </Motion.div>
@@ -501,36 +482,37 @@ Line 284:
          </div>
       </section>
 
-      {/* AI Compatibility Mesh Gradient Section */}
-      <section className="py-32 relative overflow-hidden bg-gray-50 border-t border-gray-100">
-         {/* Animated Pastel Mesh Gradient Background */}
+      {/* AI Compatibility CTA */}
+      <section className="py-32 relative overflow-hidden" style={{ background: 'var(--bg-primary)', borderTop: '1px solid var(--border)' }}>
          <div className="absolute inset-0 opacity-50">
             <Motion.div 
               animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-red-100 blur-[100px] mix-blend-multiply"
+              className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full blur-[100px]"
+              style={{ background: 'rgba(220,20,60,0.08)' }}
             />
             <Motion.div 
               animate={{ scale: [1, 1.5, 1], rotate: [0, -90, 0] }}
               transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] rounded-full bg-blue-100 blur-[100px] mix-blend-multiply"
+              className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] rounded-full blur-[100px]"
+              style={{ background: 'rgba(124,58,237,0.06)' }}
             />
          </div>
          
          <div className="container mx-auto px-6 relative z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-16 bg-white/70 p-10 md:p-16 rounded-[3rem] border border-white backdrop-blur-2xl shadow-2xl shadow-gray-200/50">
+            <div className="flex flex-col lg:flex-row items-center gap-16 p-10 md:p-16 rounded-[3rem]" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', backdropFilter: 'blur(20px)' }}>
                <div className="flex-1">
-                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-red-100 text-red-600 shadow-sm text-xs font-black tracking-widest uppercase mb-6">
-                   <Droplets className="w-4 h-4 text-red-500" />
+                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style={{ background: 'rgba(220,20,60,0.1)', border: '1px solid rgba(220,20,60,0.2)', color: '#ff3355', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                   <Droplets className="w-4 h-4" />
                    AI Powered
                  </div>
-                 <h2 className="text-4xl md:text-6xl font-black brand-font mb-6 leading-[1.1] tracking-tighter text-gray-900">
-                   Check Your <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">Compatibility.</span>
+                 <h2 className="text-4xl md:text-6xl font-black brand-font mb-6 leading-[1.1] tracking-tighter" style={{ color: 'var(--text-primary)' }}>
+                   Check Your <br/><span style={{ background: 'linear-gradient(90deg, #ff3355, #ff8080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Compatibility.</span>
                  </h2>
-                 <p className="text-xl text-gray-500 font-medium mb-10 max-w-lg leading-relaxed">
-                   Instantly discover who you can donate to and receive from utilizing our state-of-the-art interactive blood matrix.
+                 <p className="text-xl font-medium mb-10 max-w-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                   Instantly discover who you can donate to and receive from using our state-of-the-art interactive blood matrix.
                  </p>
-                 <Link to="/compatibility" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gray-900 text-white hover:bg-red-600 font-black rounded-full text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl shadow-gray-900/20">
+                 <Link to="/compatibility" className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-sm uppercase tracking-widest font-black transition-all hover:scale-105" style={{ background: 'linear-gradient(135deg, #dc143c, #9b0023)', color: '#fff', boxShadow: '0 4px 24px rgba(220,20,60,0.3)' }}>
                    Launch Matrix System
                  </Link>
                </div>
@@ -544,8 +526,8 @@ Line 284:
                        whileInView={{ opacity: 1, scale: 1 }}
                        viewport={{ once: true }}
                        transition={{ delay: i * 0.05 }}
-                       whileHover={{ scale: 1.1, backgroundColor: "#fee2e2", borderColor: "#fca5a5", color: "#b91c1c" }}
-                       className="aspect-square rounded-2xl bg-white border border-gray-200 shadow-sm flex items-center justify-center font-black brand-font text-xl text-gray-400 cursor-pointer transition-colors hover:shadow-md hover:shadow-red-200/50"
+                       whileHover={{ scale: 1.1 }}
+                       style={{ aspectRatio: '1', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.1rem', cursor: 'pointer', background: 'var(--bg-primary)', border: '1px solid var(--border)', color: 'var(--text-muted)', transition: 'all 0.2s' }}
                      >
                        {type}
                      </Motion.div>
@@ -554,7 +536,10 @@ Line 284:
                </div>
             </div>
          </div>
-      </section>
+       </section>
+
+      <AboutCreator />
+
     </div>
   );
 };

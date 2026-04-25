@@ -378,9 +378,9 @@ const UserDashboard = () => {
                     {activeSection === 'main' && (
                         <motion.div key="main" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="space-y-12">
                             {/* PREMIUM HERO */}
-                            <div className="relative rounded-[3rem] overflow-hidden bg-gray-900 border border-white/10 shadow-2xl group min-h-[400px]">
+                            <div className="relative rounded-[3rem] overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] shadow-2xl group min-h-[400px]">
                                 <img src="/images/sanctuary_bg.png" className="absolute inset-0 w-full h-full object-cover opacity-50 scale-110 group-hover:scale-100 transition-transform duration-[2s] pointer-events-none" alt="" />
-                                <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent ${isDark ? 'opacity-90' : 'opacity-70'}`}></div>
+                                <div className={`absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-[var(--bg-card)]/40 to-transparent ${isDark ? 'opacity-90' : 'opacity-70'}`}></div>
                                 
                                 <div className="relative z-10 p-12 h-full flex flex-col md:flex-row items-center gap-12">
                                     <div className="flex-grow text-center md:text-left">
@@ -390,39 +390,39 @@ const UserDashboard = () => {
                                         </div>
                                         <div className="flex items-center gap-6 mb-4">
                                             {user?.avatar ? (
-                                                <img src={user.avatar} alt="Profile" className="w-20 h-20 rounded-2xl object-cover shadow-lg border-2 border-[var(--accent)]/50 bg-slate-900" />
+                                                <img src={user.avatar} alt="Profile" className="w-20 h-20 rounded-2xl object-cover shadow-lg border-2 border-[var(--accent)]/50 bg-[var(--bg-primary)]" />
                                             ) : (
                                                 <AnimatedAvatar size="lg" user={user} />
                                             )}
-                                            <h1 className="text-4xl md:text-6xl font-black text-white brand-font tracking-tight">
+                                            <h1 className="text-4xl md:text-6xl font-black brand-font tracking-tight text-[var(--text-primary)]">
                                                 Hello, {user?.name?.split(' ')[0]} <span className="text-red-500">.</span>
                                             </h1>
                                         </div>
-                                        <p className="text-gray-400 text-lg md:text-xl font-medium max-w-lg mb-8">
+                                        <p className="text-[var(--text-secondary)] text-lg md:text-xl font-medium max-w-lg mb-8">
                                             Your dedication is incredible. You've personally impacted {dashboardData.livesSaved} lives through your generosity.
                                         </p>
                                         
                                         <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                                            <div className="flex items-center gap-4 px-6 py-4 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group">
+                                            <div className="flex items-center gap-4 px-6 py-4 rounded-3xl bg-[var(--bg-primary)] border border-[var(--border)] backdrop-blur-sm hover:bg-[var(--bg-secondary)] transition-colors group">
                                                 <PremiumMedal tier={dashboardData.badge} size="sm" />
                                                 <div>
-                                                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Impact Level</div>
-                                                    <div className="text-xl font-black text-white brand-font tracking-tight">{dashboardData.badge}</div>
+                                                    <div className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mb-1">Impact Level</div>
+                                                    <div className="text-xl font-black text-[var(--text-primary)] brand-font tracking-tight">{dashboardData.badge}</div>
                                                 </div>
                                             </div>
-                                            <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm relative group cursor-help">
-                                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1 flex items-center gap-1">
-                                                    Total Points <AlertCircle className="w-3 h-3 text-red-400" />
+                                             <div className="px-6 py-3 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border)] backdrop-blur-sm relative group cursor-help">
+                                                <div className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mb-1 flex items-center gap-1">
+                                                    Total Points <AlertCircle className="w-3 h-3 text-red-500" />
                                                 </div>
-                                                <div className="text-xl font-black text-red-400 brand-font">{dashboardData.points} XP</div>
-                                                <div className="absolute top-full left-0 mt-2 w-64 bg-slate-900/95 text-xs text-gray-300 p-4 rounded-xl border border-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-2xl backdrop-blur-md">
+                                                <div className="text-xl font-black text-red-500 brand-font">{dashboardData.points} XP</div>
+                                                <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--bg-secondary)] text-xs text-[var(--text-secondary)] p-4 rounded-xl border border-[var(--border)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-2xl backdrop-blur-md">
                                                     Points are generated upon Admin completion of your donation session.
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div className="shrink-0 p-8 rounded-[3rem] bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
+                                    <div className="shrink-0 p-8 rounded-[3rem] bg-[var(--bg-primary)] border border-[var(--border)] backdrop-blur-xl shadow-2xl">
                                         <EligibilityRing date={dashboardData.nextEligibilityDate} />
                                     </div>
                                 </div>
@@ -434,7 +434,7 @@ const UserDashboard = () => {
                                 <div className="group relative">
                                     <StatCard title="Pending Review" value={dashboardData.pending} colorClass="text-yellow-500" Icon={Hourglass} delay={0.2} />
                                     {dashboardData.pending > 0 && (
-                                        <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-56 bg-slate-900/95 text-xs text-yellow-100 p-4 rounded-xl border border-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-2xl backdrop-blur-md">
+                                        <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-56 bg-[var(--bg-secondary)] text-xs text-yellow-600 p-4 rounded-xl border border-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-center shadow-2xl backdrop-blur-md">
                                             Awaiting administrative verification. Points will be awarded upon approval!
                                         </div>
                                     )}
@@ -462,7 +462,7 @@ const UserDashboard = () => {
                                         </div>
                                     </div>
                                     
-                                    <Link to="/compatibility" className="px-8 py-4 bg-white border border-gray-200 rounded-2xl text-gray-900 font-black brand-font text-xs uppercase tracking-widest hover:bg-gray-50 transition-all flex items-center gap-2">
+                                    <Link to="/compatibility" className="px-8 py-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-2xl text-[var(--text-primary)] font-black brand-font text-xs uppercase tracking-widest hover:bg-[var(--bg-secondary)] transition-all flex items-center gap-2">
                                         View Full Analyzer <ArrowRightLeft className="w-4 h-4" />
                                     </Link>
                                 </div>
@@ -485,17 +485,17 @@ const UserDashboard = () => {
                                     </div>
                                 </motion.button>
 
-                                <motion.button 
+                                 <motion.button 
                                     whileHover={{ y: -5 }}
                                     onClick={() => setActiveSection('donate')}
-                                    className="group relative h-64 rounded-[3rem] overflow-hidden bg-slate-900 shadow-xl border border-white/10"
+                                    className="group relative h-64 rounded-[3rem] overflow-hidden bg-[var(--bg-secondary)] shadow-xl border border-[var(--border)]"
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 group-hover:scale-110 transition-transform duration-700"></div>
-                                    <div className="relative h-full p-10 flex flex-col justify-between items-start text-white text-left">
-                                        <HandHeart className="w-12 h-12 mb-4" />
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] to-[var(--bg-card)] group-hover:scale-110 transition-transform duration-700"></div>
+                                    <div className="relative h-full p-10 flex flex-col justify-between items-start text-[var(--text-primary)] text-left">
+                                        <HandHeart className="w-12 h-12 mb-4 text-[var(--accent)]" />
                                         <div>
                                             <h3 className="text-3xl font-black brand-font mb-2">Offer a Donation</h3>
-                                            <p className="text-slate-400 font-medium opacity-80 max-w-xs">Become a hero. Schedule your next donation session at a nearby camp.</p>
+                                            <p className="text-[var(--text-muted)] font-medium opacity-80 max-w-xs">Become a hero. Schedule your next donation session at a nearby camp.</p>
                                         </div>
                                     </div>
                                 </motion.button>
@@ -679,7 +679,7 @@ const UserDashboard = () => {
                                         </div>
                                     )}
 
-                                    <button disabled={isLoading} className={`w-full py-6 rounded-2xl font-black brand-font tracking-[0.2em] uppercase transition-all shadow-xl hover:-translate-y-1 ${activeSection === 'request' ? 'bg-red-600 shadow-red-500/30' : 'bg-slate-950 shadow-slate-900/40'} text-white`}>
+                                    <button disabled={isLoading} className={`w-full py-6 rounded-2xl font-black brand-font tracking-[0.2em] uppercase transition-all shadow-xl hover:-translate-y-1 ${activeSection === 'request' ? 'bg-red-600 shadow-red-500/30' : 'bg-[var(--text-primary)] text-[var(--bg-primary)] shadow-[var(--shadow)]'} text-white`}>
                                         {isLoading ? 'INITIATING...' : activeSection === 'request' ? 'SUBMIT EMERGENCY REQUEST' : 'CONFIRM DONATION OFFER'}
                                     </button>
                                 </form>
@@ -691,8 +691,8 @@ const UserDashboard = () => {
                     {activeSection === 'edit-profile' && (
                         <motion.div key="edit-profile" variants={tabVars} initial="hidden" animate="visible" exit="exit" className="max-w-6xl mx-auto py-12">
                             
-                            <h2 className="text-4xl font-black text-white brand-font mb-2">My Sanctuary Profile</h2>
-                            <p className="text-slate-400 font-medium mb-12">Review your current registered details or propose an update to your public donor identity.</p>
+                            <h2 className="text-4xl font-black text-[var(--text-primary)] brand-font mb-2">My Sanctuary Profile</h2>
+                            <p className="text-[var(--text-muted)] font-medium mb-12">Review your current registered details or propose an update to your public donor identity.</p>
 
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                                 
@@ -728,7 +728,7 @@ const UserDashboard = () => {
                                                 <span className="text-sm font-bold text-[var(--text-primary)]">{user?.city || 'City'}, {user?.state || 'State'}</span>
                                             </div>
                                             
-                                            <div className="flex justify-between items-center bg-slate-950 p-6 rounded-3xl border border-[var(--border)] mt-8 group-hover:border-red-500/30 transition-colors">
+                                            <div className="flex justify-between items-center bg-[var(--bg-primary)] p-6 rounded-3xl border border-[var(--border)] mt-8 group-hover:border-red-500/30 transition-colors">
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Blood Group</span>
                                                 <span className="text-2xl font-black text-red-500 leading-none">{user?.bloodGroup || 'NA'}</span>
                                             </div>
@@ -748,9 +748,9 @@ const UserDashboard = () => {
                                         <div className="flex flex-col md:flex-row items-center gap-8 mb-8 bg-[var(--bg-primary)] p-6 rounded-[2.5rem] border border-[var(--border)]">
                                             <div className="relative group cursor-pointer shrink-0">
                                                 {editForm.avatar ? (
-                                                    <img src={editForm.avatar} alt="Avatar Preview" className="w-24 h-24 rounded-[1.5rem] object-cover border-2 border-[var(--border)] group-hover:border-[var(--accent)] transition-all shadow-xl bg-slate-900" />
+                                                    <img src={editForm.avatar} alt="Avatar Preview" className="w-24 h-24 rounded-[1.5rem] object-cover border-2 border-[var(--border)] group-hover:border-[var(--accent)] transition-all shadow-xl bg-[var(--bg-primary)]" />
                                                 ) : (
-                                                    <div className="w-24 h-24 rounded-[1.5rem] border-2 border-dashed border-[var(--border)] group-hover:border-[var(--accent)] flex items-center justify-center bg-slate-900 transition-all shadow-xl">
+                                                    <div className="w-24 h-24 rounded-[1.5rem] border-2 border-dashed border-[var(--border)] group-hover:border-[var(--accent)] flex items-center justify-center bg-[var(--bg-primary)] transition-all shadow-xl">
                                                         <AnimatedAvatar size="md" user={user} />
                                                     </div>
                                                 )}

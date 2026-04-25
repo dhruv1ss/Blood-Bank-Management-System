@@ -163,12 +163,12 @@ const AvatarFeedback = ({ status = 'idle', onDismiss }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[10000] flex flex-col items-center justify-center pointer-events-none"
-          style={{ background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(20px)' }}
+          style={{ background: 'var(--bg-overlay, rgba(15, 23, 42, 0.85))', backdropFilter: 'blur(20px)' }}
         >
           {/* Digital Grid Backdrop */}
           <div className="absolute inset-0 pointer-events-none opacity-[0.05]"
             style={{ 
-              backgroundImage: 'radial-gradient(#38bdf8 1.5px, transparent 0)', 
+              backgroundImage: 'radial-gradient(var(--accent, #38bdf8) 1.5px, transparent 0)', 
               backgroundSize: '48px 48px' 
             }}
           />
@@ -190,13 +190,13 @@ const AvatarFeedback = ({ status = 'idle', onDismiss }) => {
               className="px-12 py-10 rounded-[4rem] text-center shadow-2xl relative overflow-hidden"
               style={{
                 background: isSuccess 
-                  ? 'linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98))' 
+                  ? 'var(--bg-card)' 
                   : 'linear-gradient(145deg, rgba(62, 4, 4, 0.98), rgba(42, 2, 2, 0.98))',
-                border: `2px solid ${isSuccess ? 'rgba(56, 189, 248, 0.3)' : 'rgba(239, 68, 68, 0.4)'}`,
+                border: `2px solid ${isSuccess ? 'var(--border)' : 'rgba(239, 68, 68, 0.4)'}`,
                 minWidth: '420px',
                 boxShadow: isSuccess 
-                  ? '0 40px 100px -20px rgba(0, 0, 0, 1), 0 0 40px rgba(56, 189, 248, 0.15)' 
-                  : '0 40px 100px -20px rgba(0, 0, 0, 1), 0 0 40px rgba(239, 68, 68, 0.15)',
+                  ? '0 40px 100px -20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(56, 189, 248, 0.15)' 
+                  : '0 40px 100px -20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(239, 68, 68, 0.15)',
               }}
             >
               {/* Scanline Sweep (Fixed to prevent stretching) */}
@@ -210,10 +210,10 @@ const AvatarFeedback = ({ status = 'idle', onDismiss }) => {
                 <span className="text-[11px] font-black uppercase tracking-[0.5em] mb-3 opacity-60" style={{ color: isSuccess ? '#38bdf8' : '#ef4444' }}>
                   {isSuccess ? 'LifeFlow Neural Link' : 'Security Breach'}
                 </span>
-                <h2 className="text-4xl font-black text-white tracking-tight mb-3">
+                <h2 className="text-4xl font-black tracking-tight mb-3 text-[var(--text-primary)]">
                   {isSuccess ? 'Access Granted' : 'Access Restricted'}
                 </h2>
-                <p className="text-base font-medium opacity-60 mb-8 max-w-[300px] mx-auto" style={{ color: isSuccess ? '#bae6fd' : '#fecaca' }}>
+                <p className="text-base font-medium opacity-70 mb-8 max-w-[300px] mx-auto" style={{ color: isSuccess ? 'var(--text-secondary)' : '#fecaca' }}>
                   {isSuccess 
                     ? 'Syncing biometric data with the donor network... Welcome back.' 
                     : 'System mismatch detected. Verification protocol failed.'}

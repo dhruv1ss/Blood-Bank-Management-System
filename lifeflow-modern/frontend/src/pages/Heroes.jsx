@@ -131,7 +131,7 @@ const Heroes = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] transition-all duration-500 ${
                                     activeTab === tab.id
-                                        ? 'bg-slate-950 text-white shadow-2xl shadow-black/40 -translate-y-1'
+                                        ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] shadow-2xl shadow-black/40 -translate-y-1'
                                         : 'text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-primary)]'
                                 }`}
                             >
@@ -171,7 +171,7 @@ const Heroes = () => {
                                                 onClick={() => setTimeframe(option.value)}
                                                 className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                                                     timeframe === option.value
-                                                        ? 'bg-slate-950 text-white'
+                                                        ? 'bg-[var(--text-primary)] text-[var(--bg-primary)]'
                                                         : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                                                 }`}
                                             >
@@ -245,10 +245,10 @@ const Heroes = () => {
                     >
                         <div className="container mx-auto max-w-6xl">
                             {/* User Progress */}
-                            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-white/10">
+                            <div className="bg-[var(--bg-secondary)] backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[var(--border)]">
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div>
-                                        <h3 className="text-white text-2xl font-bold mb-4">Your Progress</h3>
+                                        <h3 className="text-[var(--text-primary)] text-xl font-black uppercase tracking-widest mb-6">Your Progress</h3>
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-6">
                                                 <PremiumMedal tier={userAchievements.user?.badge} size="lg" />
@@ -376,7 +376,7 @@ const Heroes = () => {
                     >
                         <div className="container mx-auto max-w-6xl">
                             <div className="flex justify-between items-center mb-8">
-                                <h2 className="text-white text-2xl font-bold">Real-time Analytics</h2>
+                                <h2 className="text-[var(--text-primary)] text-2xl font-bold">Real-time Analytics</h2>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => exportReport('pdf')}
@@ -499,7 +499,7 @@ const Heroes = () => {
                                 <div className="inline-block animate-spin">
                                     <Heart className="w-8 h-8 text-red-500" />
                                 </div>
-                                <p className="text-white mt-4">Loading heroes...</p>
+                                <p className="text-[var(--text-secondary)] mt-4">Loading heroes...</p>
                             </div>
                         ) : (
                             <div className="space-y-4">

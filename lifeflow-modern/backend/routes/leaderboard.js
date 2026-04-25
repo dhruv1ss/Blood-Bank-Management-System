@@ -23,13 +23,18 @@ router.get('/top-donors', async (req, res) => {
     try {
         const { timeframe = 'all', limit = 20 } = req.query;
         
+        const isPg = sequelize.getDialect() === 'postgres';
+        const donationCountQuery = isPg
+            ? `(SELECT COUNT(*) FROM "Donations" WHERE "Donations"."userId" = "User"."id" AND ("Donations"."status" = 'COMPLETED' OR "Donations"."status" = 'APPROVED'))`
+            : `(SELECT COUNT(*) FROM Donations WHERE Donations.userId = \`User\`.\`id\` AND (Donations.status = 'COMPLETED' OR Donations.status = 'APPROVED'))`;
+
         const topDonors = await User.findAll({
             where: { role: 'DONOR' },
             attributes: [
                 'id', 'name', 'badge', 'bloodGroup', 'city', 'createdAt',
-                [sequelize.literal(`(SELECT COUNT(*) FROM "Donations" WHERE "Donations"."userId" = "User"."id" AND ("Donations"."status" = 'COMPLETED' OR "Donations"."status" = 'APPROVED'))`), 'totalDonations'],
-                [sequelize.literal(`(SELECT COUNT(*) FROM "Donations" WHERE "Donations"."userId" = "User"."id" AND ("Donations"."status" = 'COMPLETED' OR "Donations"."status" = 'APPROVED')) * 1`), 'livesSaved'],
-                [sequelize.literal(`(SELECT COUNT(*) FROM "Donations" WHERE "Donations"."userId" = "User"."id" AND ("Donations"."status" = 'COMPLETED' OR "Donations"."status" = 'APPROVED')) * 50`), 'points']
+                [sequelize.literal(donationCountQuery), 'totalDonations'],
+                [sequelize.literal(`${donationCountQuery} * 1`), 'livesSaved'],
+                [sequelize.literal(`${donationCountQuery} * 50`), 'points']
             ],
             order: [[sequelize.literal('points'), 'DESC']],
             limit: parseInt(limit)

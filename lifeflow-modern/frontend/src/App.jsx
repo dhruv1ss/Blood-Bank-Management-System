@@ -20,10 +20,14 @@ import ProtocolPage from './pages/ProtocolPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useThemeStore } from './context/themeStore';
 import { useAuthStore } from './context/authStore';
+import { useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import AnimatedPage from './components/AnimatedPage';
 
 function App() {
   const { isDark, initTheme } = useThemeStore();
   const { initAuth } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
     try {
@@ -39,20 +43,22 @@ function App() {
       <LiveTicker />
       <Navbar />
       
-      <main className="flex-grow pt-32">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/camps" element={<DonationCamps />} />
-          <Route path="/heroes" element={<Heroes />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/compatibility" element={<Compatibility />} />
-          <Route path="/protocols/:id" element={<ProtocolPage />} />
-          <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-          <Route path="/admin-dashboard" element={<ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/org-dashboard" element={<ProtectedRoute requireOrg={true}><OrgDashboard /></ProtectedRoute>} />
-        </Routes>
+      <main className="flex-grow pt-32 lg:pt-40">
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
+            <Route path="/login" element={<AnimatedPage><Login /></AnimatedPage>} />
+            <Route path="/register" element={<AnimatedPage><Register /></AnimatedPage>} />
+            <Route path="/camps" element={<AnimatedPage><DonationCamps /></AnimatedPage>} />
+            <Route path="/heroes" element={<AnimatedPage><Heroes /></AnimatedPage>} />
+            <Route path="/community" element={<AnimatedPage><Community /></AnimatedPage>} />
+            <Route path="/compatibility" element={<AnimatedPage><Compatibility /></AnimatedPage>} />
+            <Route path="/protocols/:id" element={<AnimatedPage><ProtocolPage /></AnimatedPage>} />
+            <Route path="/dashboard" element={<AnimatedPage><ProtectedRoute><UserDashboard /></ProtectedRoute></AnimatedPage>} />
+            <Route path="/admin-dashboard" element={<AnimatedPage><ProtectedRoute requireAdmin={true}><AdminDashboard /></ProtectedRoute></AnimatedPage>} />
+            <Route path="/org-dashboard" element={<AnimatedPage><ProtectedRoute requireOrg={true}><OrgDashboard /></ProtectedRoute></AnimatedPage>} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <Footer />

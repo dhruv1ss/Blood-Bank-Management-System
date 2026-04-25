@@ -11,14 +11,15 @@ const LiveTicker = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[1001] w-full pointer-events-auto">
-      <div className="h-10 bg-slate-950/80 backdrop-blur-2xl border-b border-white/10 px-6 shadow-2xl relative flex items-center gap-6 overflow-hidden">
+      <div className="h-10 glass px-6 shadow-2xl relative flex items-center gap-6 overflow-hidden" 
+           style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
         {/* Live Indicator */}
-        <div className="flex items-center gap-2 shrink-0 border-r border-white/10 pr-6">
+        <div className="flex items-center gap-2 shrink-0 border-r pr-6" style={{ borderColor: 'var(--border)' }}>
           <div className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">Live Pulse</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-primary)' }}>Live Pulse</span>
         </div>
 
         {/* Scrolling Content */}
@@ -30,15 +31,15 @@ const LiveTicker = () => {
                    event.type === 'emergency' ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 
                    event.type === 'achievement' ? 'bg-yellow-400' : 'bg-emerald-400'
                  }`}></span>
-                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 shrink-0">
+                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] shrink-0" style={{ color: 'var(--text-secondary)' }}>
                    {event.text}
                  </span>
                </div>
             ))}
           </div>
           {/* Edge Fades */}
-          <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-slate-950 to-transparent z-10"></div>
-          <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-slate-950 to-transparent z-10"></div>
+          <div className="absolute inset-y-0 left-0 w-12 z-10" style={{ background: 'linear-gradient(to right, var(--bg-card), transparent)' }}></div>
+          <div className="absolute inset-y-0 right-0 w-12 z-10" style={{ background: 'linear-gradient(to left, var(--bg-card), transparent)' }}></div>
         </div>
       </div>
     </div>

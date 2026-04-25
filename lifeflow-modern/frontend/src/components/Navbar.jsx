@@ -2,441 +2,670 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import { Menu, X, HeartPulse, LogOut, Sun, Moon, Bell, CheckCheck, Droplets, ShieldCheck, Info } from 'lucide-react';
+import {
+  Menu, X, LogOut, Bell, CheckCheck, Droplets,
+  ShieldCheck, Info, Sun, Moon, User, ChevronRight
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '../context/authStore';
 import { useThemeStore } from '../context/themeStore';
 import AnimatedAvatar from './AnimatedAvatar';
 import api from '../lib/api';
 
-// -----------------------------------------------------------------------------
-// Notification helpers
-// -----------------------------------------------------------------------------
-const getNotificationIcon = (type) => {
-    if (type === 'DONATION_APPROVED') return <Droplets className="w-4 h-4 text-red-500" />;
-    if (type === 'DONATION_REJECTED') return <ShieldCheck className="w-4 h-4 text-gray-400" />;
-    return <Info className="w-4 h-4 text-blue-500" />;
+const getNotifIcon = (type) => {
+  if (type === 'DONATION_APPROVED') return <Droplets className="w-4 h-4 text-red-400" />;
+  if (type === 'DONATION_REJECTED') return <ShieldCheck className="w-4 h-4 text-slate-400" />;
+  return <Info className="w-4 h-4 text-blue-400" />;
 };
 
 const timeAgo = (date) => {
-    const seconds = Math.floor((Date.now() - new Date(date)) / 1000);
-    if (seconds < 60) return 'just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
+  const s = Math.floor((Date.now() - new Date(date)) / 1000);
+  if (s < 60) return 'just now';
+  const m = Math.floor(s / 60); if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60); if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
 };
 
-// -----------------------------------------------------------------------------
-// Notification Bell Component
-// -----------------------------------------------------------------------------
+/* ── Notification Bell ─────────────────────────────────────────── */
 const NotificationBell = () => {
-    const [notifications, setNotifications] = useState([]);
-    const [unreadCount, setUnreadCount] = useState(0);
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedNotif, setSelectedNotif] = useState(null);
-    const panelRef = useRef(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unread, setUnread] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const ref = useRef(null);
 
-    const fetchNotifications = useCallback(async () => {
-        try {
-            const res = await api.get('/user/notifications');
-            if (res.data.status === 'success') {
-                setNotifications(res.data.data);
-                setUnreadCount(res.data.unreadCount || 0);
-            }
-        } catch { /* silent */ }
-    }, []);
+  const fetch = useCallback(async () => {
+    try {
+      const res = await api.get('/user/notifications');
+      if (res.data.status === 'success') {
+        setNotifications(res.data.data);
+        setUnread(res.data.unreadCount || 0);
+      }
+    } catch { /* silent */ }
+  }, []);
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        fetchNotifications();
-        // Poll every 60 seconds for new notifications
-        const interval = setInterval(fetchNotifications, 60000);
-        return () => clearInterval(interval);
-    }, [fetchNotifications]);
+  useEffect(() => { 
+    const init = async () => { await fetch(); };
+    init();
+    const t = setInterval(fetch, 60000); 
+    return () => clearInterval(t); 
+  }, [fetch]);
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
 
-    // Close on outside click
-    useEffect(() => {
-        const handler = (e) => {
-            if (panelRef.current && !panelRef.current.contains(e.target)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, []);
+  const openNotif = async (n) => {
+    setSelected(n);
+    if (!n.read) {
+      try {
+        await api.put(`/user/notifications/${n.id}/read`);
+        setNotifications(p => p.map(x => x.id === n.id ? { ...x, read: true } : x));
+        setUnread(c => Math.max(0, c - 1));
+      } catch { /* silent */ }
+    }
+  };
 
-    const handleOpen = () => setIsOpen((v) => !v);
+  const markAll = async () => {
+    try {
+      await api.put('/user/notifications/read-all');
+      setUnread(0);
+      setNotifications(p => p.map(n => ({ ...n, read: true })));
+    } catch { /* silent */ }
+  };
 
-    const handleOpenNotif = async (notif) => {
-        setSelectedNotif(notif);
-        if (!notif.read) {
-            try {
-                await api.put(`/user/notifications/${notif.id}/read`);
-                setNotifications((prev) => prev.map((n) => n.id === notif.id ? { ...n, read: true } : n));
-                setUnreadCount((c) => Math.max(0, c - 1));
-            } catch { /* silent */ }
-        }
-    };
+  return (
+    <div className="relative" ref={ref}>
+      <motion.button
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setOpen(v => !v)}
+        className="nb-bell-btn"
+      >
+        <motion.div animate={unread > 0 ? { rotate: [0, -15, 15, -10, 10, 0] } : {}} transition={{ duration: 0.6, delay: 0.3 }}>
+          <Bell size={18} />
+        </motion.div>
+        <AnimatePresence>
+          {unread > 0 && (
+            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="nb-badge">
+              {unread > 9 ? '9+' : unread}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.button>
 
-    const handleMarkAllRead = async () => {
-        try {
-            await api.put('/user/notifications/read-all');
-            setUnreadCount(0);
-            setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-        } catch { /* silent */ }
-    };
-
-    return (
-        <div className="relative" ref={panelRef}>
-            {/* Bell Button */}
-            <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={handleOpen}
-                className="relative p-2 rounded-full text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all"
-                title="Notifications"
-            >
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 400 }}
+            className="nb-panel"
+          >
+            <div className="nb-panel-header">
+              <div>
+                <h3 className="nb-panel-title">Notifications</h3>
+                {unread > 0 && <p className="nb-panel-sub">{unread} unread</p>}
+              </div>
+              {unread > 0 && (
+                <button onClick={markAll} className="nb-mark-all">
+                  <CheckCheck size={12} /> Mark all read
+                </button>
+              )}
+            </div>
+            <div className="nb-list">
+              {notifications.length === 0 ? (
+                <div className="nb-empty">
+                  <div className="nb-empty-icon"><Bell size={18} /></div>
+                  <p>No notifications yet</p>
+                </div>
+              ) : notifications.map((n, i) => (
                 <motion.div
-                    animate={unreadCount > 0 ? { rotate: [0, -15, 15, -10, 10, 0] } : {}}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                  key={n.id || i}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  onClick={() => openNotif(n)}
+                  className={`nb-item ${!n.read ? 'unread' : ''}`}
                 >
-                    <Bell className="w-5 h-5" />
+                  <div className={`nb-item-icon ${!n.read ? 'unread' : ''}`}>{getNotifIcon(n.type)}</div>
+                  <div className="nb-item-content">
+                    <p className={`nb-item-title ${!n.read ? 'unread' : ''}`}>{n.title}</p>
+                    <p className="nb-item-msg">{n.message}</p>
+                    <p className="nb-item-time">{timeAgo(n.createdAt)}</p>
+                  </div>
+                  {!n.read && <span className="nb-dot" />}
                 </motion.div>
-
-                {/* Red badge */}
-                <AnimatePresence>
-                    {unreadCount > 0 && (
-                        <motion.span
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 shadow-lg shadow-red-500/40"
-                        >
-                            {unreadCount > 9 ? '9+' : unreadCount}
-                        </motion.span>
-                    )}
-                </AnimatePresence>
-            </motion.button>
-
-            {/* Dropdown Panel */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -8, scale: 0.97 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-                        className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 overflow-hidden z-[1000]"
-                    >
-                        {/* Panel Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-                            <div>
-                                <h3 className="text-sm font-black text-gray-900">Notifications</h3>
-                                {unreadCount > 0 && (
-                                    <p className="text-[10px] text-red-500 font-bold mt-0.5">{unreadCount} unread</p>
-                                )}
-                            </div>
-                            {unreadCount > 0 && (
-                                <motion.button
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleMarkAllRead}
-                                    className="flex items-center gap-1.5 text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-wider border border-blue-100 rounded-lg px-2.5 py-1.5 hover:bg-blue-50 transition-all"
-                                >
-                                    <CheckCheck className="w-3 h-3" />
-                                    Mark all read
-                                </motion.button>
-                            )}
-                        </div>
-
-                        {/* Notification List */}
-                        <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
-                            {notifications.length === 0 ? (
-                                <div className="py-12 flex flex-col items-center gap-3 text-center px-6">
-                                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                                        <Bell className="w-5 h-5 text-gray-300" />
-                                    </div>
-                                    <p className="text-xs text-gray-400 font-semibold">No messages yet.<br />Submit a request or donation to get started!</p>
-                                </div>
-                            ) : (
-                                notifications.map((notif, i) => (
-                                    <motion.div
-                                        key={notif.id || i}
-                                        initial={{ opacity: 0, x: 10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.04 }}
-                                        onClick={() => handleOpenNotif(notif)}
-                                        className={`flex gap-3 px-4 py-3.5 hover:bg-gray-50/80 transition-colors cursor-pointer ${!notif.read ? 'bg-blue-50/40' : ''}`}
-                                    >
-                                        {/* Icon */}
-                                        <div className={`mt-0.5 w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${!notif.read ? 'bg-red-100' : 'bg-gray-100'}`}>
-                                            {getNotificationIcon(notif.type)}
-                                        </div>
-
-                                        {/* Content */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-start justify-between gap-2">
-                                                <p className={`text-xs font-bold leading-tight ${!notif.read ? 'text-gray-900' : 'text-gray-700'}`}>
-                                                    {notif.title}
-                                                </p>
-                                                {!notif.read && (
-                                                    <span className="mt-0.5 w-2 h-2 rounded-full bg-red-500 shrink-0" />
-                                                )}
-                                            </div>
-                                            <p className="text-[11px] text-gray-500 mt-0.5 leading-snug line-clamp-2">
-                                                {notif.message}
-                                            </p>
-                                            <p className="text-[10px] text-gray-400 mt-1 font-medium">
-                                                {timeAgo(notif.createdAt)}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                ))
-                            )}
-                        </div>
-
-                        {/* Footer */}
-                        {notifications.length > 0 && (
-                            <div className="border-t border-gray-100 px-5 py-3 bg-gray-50/50">
-                                <Link
-                                    to="/dashboard"
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-[11px] font-black text-red-600 hover:text-red-700 uppercase tracking-wider"
-                                >
-                                    View My Dashboard →
-                                </Link>
-                            </div>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Notification Detail Modal — rendered in body via Portal */}
-            {selectedNotif && createPortal(
-                <AnimatePresence>
-                    <motion.div
-                        key="notif-modal-backdrop"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-md flex items-center justify-center p-6"
-                        onClick={() => setSelectedNotif(null)}
-                    >
-                        <motion.div
-                            key="notif-modal-card"
-                            initial={{ opacity: 0, scale: 0.88, y: 24 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.92, y: 12 }}
-                            transition={{ type: 'spring', damping: 26, stiffness: 360 }}
-                            className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Header */}
-                            <div className="flex items-center gap-4 px-6 pt-6 pb-5 border-b border-gray-100">
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${!selectedNotif.read ? 'bg-red-100' : 'bg-gray-100'}`}>
-                                    <span className="scale-125">{getNotificationIcon(selectedNotif.type)}</span>
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="text-base font-black text-gray-900 leading-snug">{selectedNotif.title}</h4>
-                                    <p className="text-[11px] text-gray-400 font-semibold mt-0.5">{timeAgo(selectedNotif.createdAt)}</p>
-                                </div>
-                                <button
-                                    onClick={() => setSelectedNotif(null)}
-                                    className="text-gray-400 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-100 shrink-0"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            {/* Body */}
-                            <div className="px-6 py-6">
-                                <p className="text-sm text-gray-700 leading-relaxed font-medium">{selectedNotif.message}</p>
-                            </div>
-
-                            {/* Footer */}
-                            <div className="px-6 pb-6 pt-2">
-                                <button
-                                    onClick={() => setSelectedNotif(null)}
-                                    className="w-full bg-gray-900 text-white py-3.5 rounded-2xl text-sm font-bold hover:bg-black transition-all shadow-lg shadow-gray-900/20 hover:-translate-y-0.5"
-                                >
-                                    Got it
-                                </button>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                </AnimatePresence>,
-                document.body
+              ))}
+            </div>
+            {notifications.length > 0 && (
+              <div className="nb-footer">
+                <Link to="/dashboard" onClick={() => setOpen(false)} className="nb-footer-link">
+                  View Dashboard →
+                </Link>
+              </div>
             )}
-        </div>
-    );
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Detail modal */}
+      {selected && createPortal(
+        <AnimatePresence>
+          <motion.div key="bd" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="nb-modal-bg" onClick={() => setSelected(null)}>
+            <motion.div key="bc" initial={{ opacity: 0, scale: 0.88, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 12 }} transition={{ type: 'spring', damping: 26, stiffness: 360 }}
+              className="nb-modal" onClick={e => e.stopPropagation()}>
+              <div className="nb-modal-header">
+                <div className={`nb-modal-icon ${!selected.read ? 'unread' : ''}`}>
+                  {getNotifIcon(selected.type)}
+                </div>
+                <div className="nb-modal-meta">
+                  <h4>{selected.title}</h4>
+                  <span>{timeAgo(selected.createdAt)}</span>
+                </div>
+                <button onClick={() => setSelected(null)} className="nb-modal-close"><X size={18} /></button>
+              </div>
+              <div className="nb-modal-body"><p>{selected.message}</p></div>
+              <div className="nb-modal-footer">
+                <button onClick={() => setSelected(null)} className="nb-modal-btn">Got it</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>,
+        document.body
+      )}
+    </div>
+  );
 };
 
-// -----------------------------------------------------------------------------
-// Navbar
-// -----------------------------------------------------------------------------
+/* ── Main Navbar ───────────────────────────────────────────────── */
 const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { isAuthenticated, user, logout } = useAuthStore();
-    const { isDark, toggleTheme } = useThemeStore();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isDark, toggleTheme } = useThemeStore();
 
-    useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
 
-    useEffect(() => {
-        if (isMobileMenuOpen) {
-            const timer = setTimeout(() => setIsMobileMenuOpen(false), 0);
-            return () => clearTimeout(timer);
+  // Removed premature effect closure
+
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Camps', path: '/camps' },
+    { name: 'Heroes', path: '/heroes' },
+    { name: 'Community', path: '/community' },
+    { name: 'Compatibility', path: '/compatibility' },
+  ];
+
+  const handleLogout = () => { logout(); navigate('/login'); };
+  const showBell = isAuthenticated && user?.role === 'DONOR';
+
+  return (
+    <>
+      <style>{`
+        .lf-nav {
+          position: fixed;
+          top: 50px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100% - 48px);
+          max-width: 1200px;
+          z-index: 999;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 20px;
+          font-family: 'Inter','Outfit',system-ui,sans-serif;
         }
-    }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'Donation Camps', path: '/camps' },
-        { name: 'Heroes', path: '/heroes' },
-        { name: 'Community', path: '/community' },
-        { name: 'Compatibility', path: '/compatibility' },
-    ];
-
-    if (isAuthenticated) {
-        if (user?.role === 'ADMIN') {
-            navLinks.push({ name: 'Admin Panel', path: '/admin-dashboard' });
-        } else if (user?.role === 'ORGANIZATION') {
-            navLinks.push({ name: 'Create Camp', path: '/org-dashboard' });
-        } else {
-            navLinks.push({ name: 'My Dashboard', path: '/dashboard' });
+        .lf-nav.top {
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          backdrop-filter: blur(24px);
+          box-shadow: var(--shadow);
         }
-    }
+        .lf-nav.scrolled {
+          background: var(--bg-primary);
+          opacity: 0.98;
+          top: 20px;
+          width: calc(100% - 32px);
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow);
+        }
+        .lf-nav-inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 24px;
+          height: 60px;
+        }
 
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
+        /* Logo */
+        .lf-nav-logo {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          flex-shrink: 0;
+        }
+        .lf-nav-logo-icon {
+          width: 36px; height: 36px;
+          background: linear-gradient(135deg, #dc143c, #8b0000);
+          border-radius: 10px;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 0 16px rgba(220,20,60,0.4);
+          flex-shrink: 0;
+        }
+        .lf-nav-logo-text {
+          font-size: 1.15rem;
+          font-weight: 900;
+          color: var(--text-primary);
+          letter-spacing: -0.02em;
+        }
+        .lf-nav-logo-text span { color: #ff3355; }
 
-    const showBell = isAuthenticated && user?.role === 'DONOR';
-    return (
-        <nav
-            className={`fixed w-full z-[999] top-10 transition-all duration-300 ${
-                isScrolled ? 'bg-white bg-opacity-95 shadow-lg py-2 backdrop-blur-md border-b border-gray-100' : 'bg-white bg-opacity-70 py-4 glass'
-            }`}
-        >
-            <div className="container mx-auto px-6 flex justify-between items-center">
-                <Link to="/" className="text-3xl font-bold text-red-600 tracking-tighter flex items-center gap-2 brand-font transform transition hover:scale-105">
-                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-                        <HeartPulse className="text-red-500 w-8 h-8" />
-                    </motion.div>
-                    LifeFlow
-                </Link>
+        /* Desktop links */
+        .lf-nav-links {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+        .lf-nav-link {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--text-secondary);
+          padding: 8px 16px;
+          border-radius: 12px;
+          transition: all 0.3s;
+          letter-spacing: 0.01em;
+          text-decoration: none;
+        }
+        .lf-nav-link:hover {
+          color: var(--accent);
+          background: rgba(220, 20, 60, 0.05);
+        }
 
-                {/* Desktop Navigation */}
-                <div className="hidden md:flex space-x-8 text-sm uppercase tracking-wider font-semibold items-center">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`transition-colors relative group ${
-                                location.pathname === link.path ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-                            }`}
-                        >
-                            {link.name}
-                            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full ${location.pathname === link.path ? 'w-full' : ''}`}></span>
-                        </Link>
-                    ))}
+        /* Actions area */
+        .lf-nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .lf-nav-theme-btn {
+          width: 34px; height: 34px;
+          border-radius: 9px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .lf-nav-theme-btn:hover { background: var(--bg-primary); color: var(--accent); }
 
-                    {isAuthenticated ? (
-                        <div className="flex items-center gap-3 border-l border-gray-200 pl-4">
-                            <span className="text-gray-900 font-bold brand-font mr-1">HI {user?.name?.split(' ')[0].toUpperCase()}</span>
-                            <Link to={user?.role === 'ADMIN' ? '/admin-dashboard' : user?.role === 'ORGANIZATION' ? '/org-dashboard' : '/dashboard?section=edit-profile'} className="transition-transform active:scale-95" title="Edit Profile">
-                                <AnimatedAvatar size="sm" user={user} />
-                            </Link>
+        .lf-nav-login {
+          padding: 7px 16px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          font-size: 0.82rem; font-weight: 700;
+          text-decoration: none;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .lf-nav-login:hover { background: var(--bg-primary); color: var(--accent); border-color: var(--accent); }
 
-                            {/* Notification Bell — only for DONOR */}
-                            {showBell && <NotificationBell />}
+        .lf-nav-register {
+          padding: 8px 18px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #dc143c, #9b0023);
+          color: #fff;
+          font-size: 0.82rem; font-weight: 800;
+          text-decoration: none;
+          transition: all 0.2s;
+          white-space: nowrap;
+          box-shadow: 0 2px 14px rgba(220,20,60,0.3);
+          letter-spacing: 0.01em;
+        }
+        .lf-nav-register:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(220,20,60,0.4); }
 
-                            <button onClick={toggleTheme} className="text-gray-600 hover:text-gray-900 transition-colors" title="Toggle dark mode">
-                                {isDark ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5" />}
-                            </button>
-                            <button onClick={handleLogout} className="bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-black transition-all shadow-md hover:shadow-lg text-sm flex items-center gap-2 font-bold">
-                                <LogOut className="w-4 h-4" /> Logout
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-4">
-                            <button onClick={toggleTheme} className="text-gray-600 hover:text-gray-900 transition-colors" title="Toggle dark mode">
-                                {isDark ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5" />}
-                            </button>
-                            <Link to="/login" className="text-gray-700 hover:text-red-600 transition-colors">Login</Link>
-                            <Link to="/register" className="bg-red-600 text-white px-6 py-2.5 rounded-full hover:bg-red-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 font-bold">Register</Link>
-                        </div>
-                    )}
-                </div>
+        .lf-nav-logout {
+          padding: 7px 14px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          font-size: 0.78rem; font-weight: 700;
+          cursor: pointer;
+          display: flex; align-items: center; gap: 6px;
+          transition: all 0.2s;
+          white-space: nowrap;
+          letter-spacing: 0.01em;
+          font-family: inherit;
+        }
+        .lf-nav-logout:hover { background: rgba(220,20,60,0.15); color: #ff3355; border-color: rgba(220,20,60,0.3); }
 
-                {/* Mobile Menu Button */}
-                <button
-                    className="md:hidden text-gray-700 hover:text-red-600 focus:outline-none transition-transform active:scale-95"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        .lf-nav-user-chip {
+          display: flex; align-items: center; gap: 8px;
+          padding: 4px 12px 4px 6px;
+          border-radius: 100px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          cursor: pointer;
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+        .lf-nav-user-chip:hover { background: var(--bg-secondary); }
+        .lf-nav-user-name {
+          font-size: 0.78rem; font-weight: 800;
+          color: var(--text-primary);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        /* Notification Bell styles */
+        .nb-bell-btn {
+          position: relative;
+          width: 34px; height: 34px;
+          border-radius: 9px;
+          border: 1px solid var(--border);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .nb-bell-btn:hover { background: var(--bg-primary); color: var(--accent); }
+          font-size: 9px; font-weight: 900;
+          border-radius: 100px;
+          display: flex; align-items: center; justify-content: center;
+          padding: 0 4px;
+          box-shadow: 0 0 8px rgba(220,20,60,0.5);
+        }
+        .nb-panel {
+          position: absolute; right: 0; top: calc(100% + 10px);
+          width: 320px;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          overflow: hidden;
+          box-shadow: var(--shadow);
+          backdrop-filter: blur(24px);
+          z-index: 1000;
+        }
+        .nb-panel-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 16px 18px;
+          border-bottom: 1px solid var(--border);
+          background: var(--bg-secondary);
+        }
+        .nb-panel-title { font-size: 0.88rem; font-weight: 800; color: var(--text-primary); }
+        .nb-panel-sub { font-size: 0.7rem; color: #ff3355; font-weight: 600; margin-top: 2px; }
+        .nb-mark-all {
+          display: flex; align-items: center; gap: 5px;
+          font-size: 0.68rem; font-weight: 700; color: var(--text-muted);
+          background: var(--bg-primary);
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          padding: 5px 10px;
+          cursor: pointer; transition: all 0.2s;
+          font-family: inherit;
+          text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .nb-mark-all:hover { background: var(--bg-secondary); color: var(--text-primary); }
+        .nb-list { max-height: 300px; overflow-y: auto; }
+        .nb-empty {
+          padding: 40px 20px;
+          display: flex; flex-direction: column; align-items: center; gap: 10px;
+          color: var(--text-muted);
+        }
+        .nb-empty-icon {
+          width: 44px; height: 44px; border-radius: 50%;
+          background: var(--bg-primary);
+          display: flex; align-items: center; justify-content: center;
+        }
+        .nb-empty p { font-size: 0.78rem; font-weight: 500; }
+        .nb-item {
+          display: flex; align-items: flex-start; gap: 12px;
+          padding: 12px 18px;
+          border-bottom: 1px solid var(--border);
+          cursor: pointer;
+          transition: background 0.15s;
+          position: relative;
+        }
+        .nb-item:hover { background: var(--bg-primary); }
+        .nb-item.unread { background: rgba(220,20,60,0.04); }
+        .nb-item-icon {
+          width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center;
+          background: var(--bg-primary);
+        }
+        .nb-item-icon.unread { background: rgba(220,20,60,0.12); }
+        .nb-item-content { flex: 1; min-width: 0; }
+        .nb-item-title { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); line-height: 1.3; }
+        .nb-item-title.unread { color: var(--text-primary); }
+        .nb-item-msg { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .nb-item-time { font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; opacity: 0.6; }
+        .nb-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff3355; flex-shrink: 0; margin-top: 4px; }
+        .nb-footer-link { font-size: 0.75rem; font-weight: 800; color: #ff3355; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; }
+        .nb-footer-link:hover { color: #ff6b6b; }
+
+        /* Modal */
+        .nb-modal-bg { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .nb-modal { width: 100%; max-width: 420px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
+        .nb-modal-header { display: flex; align-items: center; gap: 14px; padding: 20px 20px 18px; border-bottom: 1px solid var(--border); }
+        .nb-modal-icon { width: 44px; height: 44px; border-radius: 13px; background: var(--bg-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .nb-modal-icon.unread { background: rgba(220,20,60,0.15); }
+        .nb-modal-meta { flex: 1; }
+        .nb-modal-meta h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-primary); }
+        .nb-modal-meta span { font-size: 0.72rem; color: var(--text-muted); }
+        .nb-modal-close { color: var(--text-muted); background: none; border: none; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.2s; }
+        .nb-modal-close:hover { background: var(--bg-primary); color: var(--text-primary); }
+        .nb-modal-body { padding: 20px; }
+        .nb-modal-body p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; }
+        .nb-modal-footer { padding: 0 20px 20px; }
+        .nb-modal-btn { width: 100%; padding: 13px; border-radius: 13px; background: linear-gradient(135deg, #dc143c, #9b0023); color: #fff; font-size: 0.88rem; font-weight: 800; border: none; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .nb-modal-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(220,20,60,0.35); }
+
+        /* Mobile menu */
+        .lf-mobile-menu {
+          position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          padding: 16px;
+          box-shadow: var(--shadow);
+          backdrop-filter: blur(24px);
+        }
+        .lf-mobile-link {
+          display: block; padding: 11px 14px;
+          border-radius: 11px;
+          font-size: 0.88rem; font-weight: 700;
+          color: var(--text-secondary);
+          text-decoration: none;
+          transition: all 0.15s;
+        }
+        .lf-mobile-link:hover, .lf-mobile-link.active { color: var(--text-primary); background: var(--bg-primary); }
+        .lf-mobile-link.active { color: #ff3355; }
+        .lf-mobile-divider { height: 1px; background: var(--border); margin: 10px 0; }
+        .lf-mobile-btn {
+          width: 100%; padding: 11px;
+          border-radius: 11px; font-size: 0.85rem; font-weight: 700;
+          cursor: pointer; margin-top: 4px; transition: all 0.2s;
+          font-family: inherit;
+        }
+        .lf-mobile-btn.login {
+          background: var(--bg-primary); color: var(--text-secondary);
+          border: 1px solid var(--border);
+        }
+        .lf-mobile-btn.register {
+          background: linear-gradient(135deg, #dc143c, #9b0023); color: #fff;
+          border: none; box-shadow: 0 4px 20px rgba(220,20,60,0.3);
+        }
+        .lf-mobile-btn.logout {
+          background: rgba(220,20,60,0.1); color: #ff3355;
+          border: 1px solid rgba(220,20,60,0.2); display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+          .lf-nav { width: calc(100% - 24px); top: 6px; border-radius: 16px; }
+          .lf-nav-links { display: none; }
+          .lf-nav-actions.desktop { display: none; }
+        }
+        @media (min-width: 769px) {
+          .lf-mobile-trigger { display: none; }
+        }
+      `}</style>
+
+      <nav className={`lf-nav ${scrolled ? 'scrolled' : 'top'}`}>
+        <div className="lf-nav-inner">
+          {/* Logo */}
+          <Link to="/" className="lf-nav-logo">
+            <motion.div
+              className="lf-nav-logo-icon"
+              animate={{ boxShadow: ['0 0 16px rgba(220,20,60,0.4)', '0 0 28px rgba(220,20,60,0.7)', '0 0 16px rgba(220,20,60,0.4)'] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            >
+              <Droplets size={18} color="#fff" />
+            </motion.div>
+            <span className="lf-nav-logo-text">Life<span>Flow</span></span>
+          </Link>
+
+          {/* Desktop links */}
+          <div className="lf-nav-links">
+            {navLinks.map(link => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`lf-nav-link relative ${isActive ? 'active' : ''}`}
+                  style={{ color: isActive ? 'var(--accent)' : 'var(--text-secondary)' }}
                 >
-                    {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-                </button>
-            </div>
-
-            {/* Mobile Navigation Drawer */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
+                  {link.name}
+                  {isActive && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl"
-                    >
-                        <div className="container mx-auto px-6 py-4 flex flex-col space-y-4 font-bold text-center">
-                            {navLinks.filter(link => {
-                                const authPaths = ['/dashboard', '/admin-dashboard', '/org-dashboard'];
-                                return !authPaths.includes(link.path);
-                            }).map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={`py-2 ${location.pathname === link.path ? 'text-red-600' : 'text-gray-700 hover:text-red-600'}`}
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
+                      layoutId="activeNavTab"
+                      className="absolute bottom-1 left-1/2 -translate-x-1/2 w-5 h-[2px] bg-[#dc143c] rounded-full shadow-[0_0_8px_rgba(220,20,60,0.4)]"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
 
-                            <div className="border-t border-gray-100 pt-4 flex flex-col gap-4">
-                                <button onClick={toggleTheme} className="flex items-center justify-center gap-2 py-2 text-gray-700 hover:text-red-600 transition-colors">
-                                    {isDark ? <><Sun className="w-5 h-5 text-yellow-500" /> Light Mode</> : <><Moon className="w-5 h-5" /> Dark Mode</>}
-                                </button>
-                                {isAuthenticated ? (
-                                    <>
-                                        <span className="text-gray-900 font-bold brand-font py-2">HI {user?.name?.split(' ')[0].toUpperCase()}</span>
-                                        <Link to={user?.role === 'ADMIN' ? '/admin-dashboard' : user?.role === 'ORGANIZATION' ? '/org-dashboard' : '/dashboard?section=edit-profile'} className="text-gray-700 hover:text-red-600 py-2">
-                                            {user?.role === 'ADMIN' ? 'Admin Panel' : user?.role === 'ORGANIZATION' ? 'Create Camp' : 'Edit Profile'}
-                                        </Link>
-                                        <button onClick={handleLogout} className="bg-gray-900 text-white px-6 py-3 rounded-xl mx-auto w-1/2 min-w-[150px] flex items-center justify-center gap-2">
-                                            <LogOut className="w-4 h-4" /> Logout
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link to="/login" className="text-gray-700 hover:text-red-600 py-2">Login</Link>
-                                        <Link to="/register" className="bg-red-600 text-white px-6 py-3 rounded-xl mx-auto w-1/2 min-w-[150px]">Register</Link>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </nav>
-    );
+          {/* Desktop actions */}
+          <div className="lf-nav-actions desktop">
+            {isAuthenticated ? (
+              <>
+                {showBell && <NotificationBell />}
+                <button onClick={toggleTheme} className="lf-nav-theme-btn" title="Toggle theme">
+                  {isDark ? <Sun size={15} color="#fbbf24" /> : <Moon size={15} />}
+                </button>
+                <Link
+                  to={user?.role === 'ADMIN' ? '/admin-dashboard' : user?.role === 'ORGANIZATION' ? '/org-dashboard' : '/dashboard'}
+                  className="lf-nav-user-chip"
+                >
+                  <AnimatedAvatar size="sm" user={user} />
+                  <span className="lf-nav-user-name">{user?.name?.split(' ')[0]}</span>
+                </Link>
+                <button onClick={handleLogout} className="lf-nav-logout" title="Logout">
+                  <LogOut size={13} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={toggleTheme} className="lf-nav-theme-btn" title="Toggle theme">
+                  {isDark ? <Sun size={15} color="#fbbf24" /> : <Moon size={15} />}
+                </button>
+                <Link to="/login" className="lf-nav-login">Log in</Link>
+                <Link to="/register" className="lf-nav-register">Get Started</Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="lf-mobile-trigger"
+            style={{
+              width: 36, height: 36, borderRadius: 10, border: '1px solid var(--border)',
+              background: 'var(--bg-card)', color: 'var(--text-secondary)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => setMobileOpen(v => !v)}
+          >
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="lf-mobile-menu"
+            >
+              {isAuthenticated && (
+                <div className="flex items-center gap-3 p-4 mb-2 bg-black/5 dark:bg-white/5 rounded-xl">
+                  <AnimatedAvatar size="sm" user={user} />
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-xs font-black text-primary truncate uppercase tracking-widest" style={{ color: 'var(--text-primary)' }}>{user?.name}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-tighter" style={{ color: 'var(--text-muted)' }}>Active Session</p>
+                  </div>
+                </div>
+              )}
+              {navLinks.map(link => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`lf-mobile-link ${location.pathname === link.path ? 'active' : ''}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              {isAuthenticated && (
+                <Link 
+                  to={user?.role === 'ADMIN' ? '/admin-dashboard' : user?.role === 'ORGANIZATION' ? '/org-dashboard' : '/dashboard'}
+                  className="lf-mobile-link"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  My Dashboard
+                </Link>
+              )}
+              <div className="lf-mobile-divider" />
+              <button onClick={toggleTheme} className="lf-mobile-btn login" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                {isDark ? <><Sun size={15} color="#fbbf24" /> Light Mode</> : <><Moon size={15} /> Dark Mode</>}
+              </button>
+              {isAuthenticated ? (
+                <button onClick={handleLogout} className="lf-mobile-btn logout">
+                  <LogOut size={14} /> Logout Session
+                </button>
+              ) : (
+                <>
+                  <Link to="/login" className="lf-mobile-btn login" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Log in</Link>
+                  <Link to="/register" className="lf-mobile-btn register" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Get Started</Link>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </>
+  );
 };
 
 export default Navbar;

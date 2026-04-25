@@ -56,7 +56,7 @@ const LifePulseMap = () => {
     }, []);
 
     return (
-        <section className="py-32 bg-gray-900 border-y border-gray-800 relative overflow-hidden">
+        <section className="py-32 bg-[var(--bg-primary)] border-y border-[var(--border)] relative overflow-hidden">
             {/* Background Grid */}
             <div className="absolute inset-0 opacity-10" style={{ 
                 backgroundImage: 'linear-gradient(#475569 1px, transparent 1px), linear-gradient(90deg, #475569 1px, transparent 1px)',
@@ -77,28 +77,28 @@ const LifePulseMap = () => {
                             Live Network Pulse
                         </Motion.div>
                         
-                        <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-white leading-tight">
+                        <h2 className="text-5xl md:text-7xl font-black brand-font tracking-tight text-[var(--text-primary)] leading-tight">
                             The Heartbeat of <br/>
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400">Global Giving.</span>
                         </h2>
                         
-                        <p className="text-xl text-gray-400 font-medium leading-relaxed">
+                        <p className="text-xl text-[var(--text-secondary)] font-medium leading-relaxed">
                             Watch the real-time flow of life. Our network connects thousands of donors to critical emergencies every second, ensuring that no request goes unanswered in the moments that matter most.
                         </p>
 
                         <div className="flex flex-wrap gap-8 py-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
-                                <span className="text-gray-300 font-bold tracking-tight">Active Emergencies</span>
+                                <span className="text-[var(--text-secondary)] font-bold tracking-tight">Active Emergencies</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                                <span className="text-gray-300 font-bold tracking-tight">Donations Fulfilled</span>
+                                <span className="text-[var(--text-secondary)] font-bold tracking-tight">Donations Fulfilled</span>
                             </div>
                         </div>
 
-                        <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl group hover:border-red-500/30 transition-colors">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2 block">System Status</span>
+                        <div className="p-8 rounded-3xl bg-[var(--bg-secondary)] border border-[var(--border)] backdrop-blur-xl group hover:border-red-500/30 transition-colors">
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-2 block">System Status</span>
                             <div className="flex items-center gap-4 text-green-400 font-black brand-font text-2xl uppercase">
                                 <ShieldCheck className="w-8 h-8" />
                                 Optimal & Secure
@@ -108,7 +108,7 @@ const LifePulseMap = () => {
 
                     {/* Map Area */}
                     <div className="flex-[1.5] w-full relative">
-                        <div className="aspect-[16/9] rounded-[3rem] bg-gray-800/50 border border-white/10 overflow-hidden relative group shadow-2xl shadow-red-500/5">
+                        <div className="aspect-[16/9] rounded-[3rem] bg-[var(--bg-secondary)] border border-[var(--border)] overflow-hidden relative group shadow-2xl shadow-red-500/5">
                             {/* Stylized Map SVG Backdrop */}
                             <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none scale-110 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 800 450">
                                 <path 
@@ -138,13 +138,13 @@ const LifePulseMap = () => {
                             </AnimatePresence>
 
                             {/* Glass Statistics Overlay */}
-                            <div className="absolute top-8 left-8 p-6 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md pointer-events-none">
+                            <div className="absolute top-8 left-8 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] backdrop-blur-md pointer-events-none">
                                 <div className="space-y-4">
                                     <div>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Impact Velocity</p>
-                                        <p className="text-xl font-black text-white brand-font uppercase">14.2 s <span className="text-red-500">/ Match</span></p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] mb-1">Impact Velocity</p>
+                                        <p className="text-xl font-black text-[var(--text-primary)] brand-font uppercase">14.2 s <span className="text-red-500">/ Match</span></p>
                                     </div>
-                                    <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="w-full h-1 bg-[var(--bg-primary)] rounded-full overflow-hidden">
                                         <Motion.div 
                                             animate={{ width: ["10%", "90%", "40%", "75%"] }}
                                             transition={{ duration: 10, repeat: Infinity }}
