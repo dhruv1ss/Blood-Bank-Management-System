@@ -133,9 +133,9 @@ const Login = () => {
         </div>
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent z-10"></div>
         <img 
-          src="https://images.unsplash.com/photo-1579154235602-3c3e87071191?auto=format&fit=crop&q=80" 
-          className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[5s]" 
-          alt="Medical Hub" 
+          src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1200" 
+          className="absolute inset-0 w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[5s]" 
+          alt="" 
         />
         <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
         <Link to="/" className="absolute top-12 left-16 flex items-center gap-4 no-underline group z-30">
