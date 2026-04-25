@@ -127,17 +127,6 @@ const Login = () => {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="hidden lg:flex flex-[1.2] relative flex-col justify-center px-16 xl:px-24 z-10"
       >
-        <div className="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
-          <h2 className="text-4xl font-black text-white brand-font tracking-tight mb-4">Advance Clinical Network</h2>
-          <p className="text-white/60 font-bold uppercase tracking-widest text-xs">Empowering the Future of Giving</p>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent z-10"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1200" 
-          className="absolute inset-0 w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[5s]" 
-          alt="" 
-        />
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
         <Link to="/" className="absolute top-12 left-16 flex items-center gap-4 no-underline group z-30">
           <div className="w-12 h-12 bg-gradient-to-br from-[#dc143c] to-[#8b0000] rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 group-hover:scale-110 transition-transform duration-500">
             <Droplets size={24} color="#fff" />
